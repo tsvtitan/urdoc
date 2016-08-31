@@ -1,0 +1,99 @@
+object fmWorkDate: TfmWorkDate
+  Left = 284
+  Top = 245
+  BorderStyle = bsDialog
+  Caption = 'Вввод данных'
+  ClientHeight = 102
+  ClientWidth = 211
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnBottom: TPanel
+    Left = 0
+    Top = 64
+    Width = 211
+    Height = 38
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+    object Panel3: TPanel
+      Left = 26
+      Top = 0
+      Width = 185
+      Height = 38
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 7
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = bibOkClick
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 7
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Отмена'
+        ModalResult = 2
+        TabOrder = 1
+        OnClick = bibCancelClick
+        NumGlyphs = 2
+      end
+    end
+  end
+  object pnWoryear: TPanel
+    Left = 0
+    Top = 0
+    Width = 211
+    Height = 64
+    Align = alClient
+    BevelOuter = bvNone
+    BorderWidth = 5
+    TabOrder = 0
+    object grbWorkYear: TGroupBox
+      Left = 5
+      Top = 5
+      Width = 201
+      Height = 54
+      Align = alClient
+      Caption = ' Введите рабочую дату  '
+      TabOrder = 0
+      object lbworkYear: TLabel
+        Left = 16
+        Top = 24
+        Width = 71
+        Height = 13
+        Caption = 'Рабочая дата:'
+      end
+      object dtpWorkdate: TDateTimePicker
+        Left = 96
+        Top = 21
+        Width = 91
+        Height = 21
+        CalAlignment = dtaLeft
+        Date = 37262.6151498032
+        Time = 37262.6151498032
+        DateFormat = dfShort
+        DateMode = dmComboBox
+        Kind = dtkDate
+        ParseInput = False
+        TabOrder = 0
+      end
+    end
+  end
+end

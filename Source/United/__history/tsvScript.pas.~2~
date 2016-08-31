@@ -1,0 +1,12 @@
+unit tsvScript;
+
+interface
+
+type
+
+  TtsvScript=class()
+  end;
+
+implementation
+
+end.

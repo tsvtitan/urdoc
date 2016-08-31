@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2008.09.15 13:54:59.562.pas,U:\Source\Urdoc\UMain.pas=</Transaction>
+    <Transaction>2008.09.15 13:54:59.562.dfm,U:\Source\Urdoc\UMain.dfm=</Transaction>
+    <Transaction>2008.09.15 15:35:15.781.pas,U:\Source\Urdoc\Unit2.pas=U:\Source\Urdoc\UScript.pas</Transaction>
+    <Transaction>2008.09.15 15:35:37.515.pas,U:\Source\Urdoc\UScript.pas=U:\Source\United\tsvScript.pas</Transaction>
+    <Transaction>2008.09.15 16:32:21.843.pas,U:\Source\United\tsvScript.pas=</Transaction>
+    <Transaction>2008.09.16 19:20:37.937.pas,U:\Source\Urdoc\ScriptEdit.pas=U:\Source\Urdoc\ScriptEditFm.pas</Transaction>
+    <Transaction>2008.09.16 19:20:37.937.dfm,U:\Source\Urdoc\ScriptEdit.dfm=U:\Source\Urdoc\ScriptEditFm.dfm</Transaction>
+    <Transaction>2008.10.02 09:18:40.640.pas,U:\Source\Urdoc\Unit2.pas=U:\Source\Urdoc\ReceptionFm.pas</Transaction>
+    <Transaction>2008.10.02 09:18:40.640.dfm,U:\Source\Urdoc\Unit2.dfm=U:\Source\Urdoc\ReceptionFm.dfm</Transaction>
+    <Transaction>2008.10.03 13:39:15.875.pas,U:\Source\Urdoc\Unit2.pas=U:\Source\Urdoc\DatabaseEditFm.pas</Transaction>
+    <Transaction>2008.10.03 13:39:15.875.dfm,U:\Source\Urdoc\Unit2.dfm=U:\Source\Urdoc\DatabaseEditFm.dfm</Transaction>
+  </Transactions>
+</BorlandProject>

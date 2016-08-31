@@ -1,0 +1,669 @@
+object fmOptions: TfmOptions
+  Left = 523
+  Top = 221
+  BorderStyle = bsDialog
+  Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072
+  ClientHeight = 416
+  ClientWidth = 532
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnBottom: TPanel
+    Left = 0
+    Top = 375
+    Width = 532
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 2
+    object Panel3: TPanel
+      Left = 347
+      Top = 0
+      Width = 185
+      Height = 41
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 10
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = bibOkClick
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 10
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = #1054#1090#1084#1077#1085#1072
+        ModalResult = 2
+        TabOrder = 1
+        NumGlyphs = 2
+      end
+    end
+  end
+  object TV: TTreeView
+    Left = 0
+    Top = 0
+    Width = 169
+    Height = 375
+    Align = alLeft
+    HideSelection = False
+    HotTrack = True
+    Indent = 19
+    ReadOnly = True
+    TabOrder = 0
+    OnChange = TVChange
+    Items.NodeData = {
+      01070000002F0000000000000000000000FFFFFFFFFFFFFFFF00000000000000
+      000B1104300437044B042000340430043D043D044B0445042500000000000000
+      00000000FFFFFFFFFFFFFFFF000000000000000006100440044504380432044B
+      04370000000000000000000000FFFFFFFFFFFFFFFF00000000000000000F1204
+      400435043C0435043D043D044B04350420004404300439043B044B0425000000
+      0000000000000000FFFFFFFFFFFFFFFF0000000000000000061F043E043C043E
+      0449044C043F0000000000000000000000FFFFFFFFFFFFFFFF00000000000000
+      0013220435043A04410442043E0432044B04390420003F0440043E0446043504
+      410441043E044004370000000000000000000000FFFFFFFFFFFFFFFF00000000
+      000000000F13043E0440044F0447043804350420003A043B0430043204380448
+      043804230000000000000000000000FFFFFFFFFFFFFFFF000000000000000005
+      1E043104490438043504}
+  end
+  object pnMain: TPanel
+    Left = 169
+    Top = 0
+    Width = 363
+    Height = 375
+    Align = alClient
+    BevelOuter = bvNone
+    BorderWidth = 5
+    TabOrder = 1
+    object ntb: TNotebook
+      Left = 5
+      Top = 35
+      Width = 353
+      Height = 335
+      Align = alClient
+      TabOrder = 0
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn1'
+        object grbBaseDir: TGroupBox
+          Left = 6
+          Top = 3
+          Width = 339
+          Height = 190
+          Caption = ' '#1057#1087#1080#1089#1086#1082' '#1073#1072#1079' '#1076#1072#1085#1085#1099#1093' '
+          TabOrder = 0
+          object ButtonDatabaseAdd: TButton
+            Left = 11
+            Top = 159
+            Width = 75
+            Height = 21
+            Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093' '#1074' '#1089#1087#1080#1089#1086#1082
+            Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+            TabOrder = 1
+            OnClick = ButtonDatabaseAddClick
+          end
+          object ButtonDatabaseChange: TButton
+            Left = 92
+            Top = 159
+            Width = 75
+            Height = 21
+            Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093' '#1074' '#1089#1087#1080#1089#1082#1077
+            Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+            TabOrder = 2
+            OnClick = ButtonDatabaseChangeClick
+          end
+          object ButtonDatabaseDelete: TButton
+            Left = 173
+            Top = 159
+            Width = 75
+            Height = 21
+            Hint = #1059#1076#1072#1083#1080#1090#1100' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1089#1087#1080#1089#1082#1072
+            Caption = #1059#1076#1072#1083#1080#1090#1100
+            TabOrder = 3
+            OnClick = ButtonDatabaseDeleteClick
+          end
+          object CheckListBoxDatabases: TCheckListBox
+            Left = 11
+            Top = 24
+            Width = 318
+            Height = 129
+            OnClickCheck = CheckListBoxDatabasesClickCheck
+            IntegralHeight = True
+            ItemHeight = 16
+            Style = lbOwnerDrawVariable
+            TabOrder = 0
+            OnDblClick = CheckListBoxDatabasesDblClick
+          end
+        end
+      end
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn2'
+        object Label1: TLabel
+          Left = 213
+          Top = 61
+          Width = 22
+          Height = 13
+          Caption = #1084#1080#1085'.'
+        end
+        object lbFreezeArch: TLabel
+          Left = 32
+          Top = 87
+          Width = 101
+          Height = 13
+          Caption = #1061#1088#1072#1085#1080#1090#1100' '#1072#1088#1093#1080#1074#1099' '#1079#1072':'
+        end
+        object Label2: TLabel
+          Left = 213
+          Top = 88
+          Width = 17
+          Height = 13
+          Caption = #1076#1085'.'
+        end
+        object lbRestoreSleep: TLabel
+          Left = 12
+          Top = 106
+          Width = 125
+          Height = 26
+          Caption = #1042#1088#1077#1084#1103' '#1086#1078#1080#1076#1072#1085#1080#1103' '#1087#1086#1089#1083#1077' '#13#10#1074#1086#1089#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1103' '#1072#1088#1093#1080#1074#1072':'
+        end
+        object lbRestoreSleepSec: TLabel
+          Left = 213
+          Top = 115
+          Width = 21
+          Height = 13
+          Caption = #1089#1077#1082'.'
+        end
+        object lbDefaultDir: TLabel
+          Left = 12
+          Top = 150
+          Width = 104
+          Height = 13
+          Caption = #1055#1091#1090#1100' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102':'
+        end
+        object chbFirstArch: TCheckBox
+          Left = 16
+          Top = 11
+          Width = 214
+          Height = 17
+          Caption = #1057#1086#1079#1076#1072#1074#1072#1090#1100' '#1087#1088#1080' '#1074#1093#1086#1076#1077' '#1074' '#1087#1088#1086#1075#1088#1072#1084#1084#1091
+          TabOrder = 0
+        end
+        object chbLastArch: TCheckBox
+          Left = 16
+          Top = 35
+          Width = 222
+          Height = 17
+          Caption = #1057#1086#1079#1076#1072#1074#1072#1090#1100' '#1087#1088#1080' '#1074#1099#1093#1086#1076#1077' '#1080#1079' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+          TabOrder = 1
+        end
+        object chbTimeArch: TCheckBox
+          Left = 16
+          Top = 59
+          Width = 126
+          Height = 17
+          Caption = #1057#1086#1079#1076#1072#1074#1072#1090#1100' '#1082#1072#1078#1076#1099#1077':'
+          TabOrder = 2
+          OnClick = chbTimeArchClick
+        end
+        object edTimeArch: TEdit
+          Left = 144
+          Top = 57
+          Width = 46
+          Height = 21
+          Color = clBtnFace
+          Enabled = False
+          ReadOnly = True
+          TabOrder = 3
+          Text = '10'
+        end
+        object udTimeArch: TUpDown
+          Left = 190
+          Top = 57
+          Width = 15
+          Height = 21
+          Associate = edTimeArch
+          Enabled = False
+          Min = 2
+          Max = 60
+          Position = 10
+          TabOrder = 4
+        end
+        object edFreezeArch: TEdit
+          Left = 144
+          Top = 84
+          Width = 46
+          Height = 21
+          ReadOnly = True
+          TabOrder = 5
+          Text = '10'
+        end
+        object udFreezeArch: TUpDown
+          Left = 190
+          Top = 84
+          Width = 15
+          Height = 21
+          Associate = edFreezeArch
+          Min = 2
+          Max = 60
+          Position = 10
+          TabOrder = 6
+        end
+        object edRestoreSleep: TEdit
+          Left = 144
+          Top = 111
+          Width = 46
+          Height = 21
+          ReadOnly = True
+          TabOrder = 7
+          Text = '10'
+        end
+        object udRestoreSleep: TUpDown
+          Left = 190
+          Top = 111
+          Width = 15
+          Height = 21
+          Associate = edRestoreSleep
+          Min = 5
+          Max = 3600
+          Position = 10
+          TabOrder = 8
+        end
+        object edDefaultDir: TEdit
+          Left = 120
+          Top = 147
+          Width = 144
+          Height = 21
+          TabOrder = 9
+          OnChange = edBaseDirChange
+        end
+      end
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn3'
+        object chbDelTempFile: TCheckBox
+          Left = 12
+          Top = 12
+          Width = 197
+          Height = 17
+          Caption = #1059#1076#1072#1083#1103#1090#1100' '#1074#1088#1077#1084#1077#1085#1085#1099#1077' '#1092#1072#1081#1083#1099
+          TabOrder = 0
+          OnClick = chbDelTempFileClick
+        end
+      end
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn4'
+        object grbFileHelp: TGroupBox
+          Left = 6
+          Top = 3
+          Width = 323
+          Height = 50
+          Caption = ' '#1060#1072#1081#1083' '#1087#1086#1084#1086#1097#1080' '
+          TabOrder = 0
+          object edFileHelp: TEdit
+            Left = 10
+            Top = 19
+            Width = 271
+            Height = 21
+            TabOrder = 0
+            OnChange = edBaseDirChange
+          end
+          object bibFileHelp: TBitBtn
+            Left = 289
+            Top = 19
+            Width = 21
+            Height = 21
+            Caption = '...'
+            TabOrder = 1
+            OnClick = bibFileHelpClick
+          end
+        end
+        object grbUpdateInfo: TGroupBox
+          Left = 6
+          Top = 56
+          Width = 323
+          Height = 67
+          Caption = ' '#1060#1072#1081#1083' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1081'  '
+          TabOrder = 1
+          Visible = False
+          object edUpdateInfoFile: TEdit
+            Left = 10
+            Top = 19
+            Width = 271
+            Height = 21
+            TabOrder = 0
+            OnChange = edBaseDirChange
+          end
+          object bibUpdateInfo: TBitBtn
+            Left = 289
+            Top = 19
+            Width = 21
+            Height = 21
+            Caption = '...'
+            TabOrder = 1
+            OnClick = bibUpdateInfoClick
+          end
+          object chbViewUpdateInfo: TCheckBox
+            Left = 9
+            Top = 44
+            Width = 224
+            Height = 17
+            Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077
+            TabOrder = 2
+          end
+        end
+      end
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn5'
+        object chbTextPClose: TCheckBox
+          Left = 8
+          Top = 8
+          Width = 233
+          Height = 17
+          Caption = #1047#1072#1082#1088#1099#1074#1072#1090#1100' '#1087#1088#1080' '#1074#1099#1093#1086#1076#1077' '#1080#1079' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+          TabOrder = 0
+        end
+      end
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn6'
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        object lbTranslateToUpperCase: TLabel
+          Left = 16
+          Top = 16
+          Width = 145
+          Height = 13
+          Caption = #1055#1077#1088#1077#1074#1086#1076' '#1074' '#1074#1077#1088#1093#1085#1080#1081' '#1088#1077#1075#1080#1089#1090#1088':'
+        end
+        object lbTranslateToLowerCase: TLabel
+          Left = 19
+          Top = 40
+          Width = 141
+          Height = 13
+          Caption = #1055#1077#1088#1077#1074#1086#1076' '#1074' '#1085#1080#1078#1085#1080#1081' '#1088#1077#1075#1080#1089#1090#1088':'
+        end
+        object lbTranslateToRussian: TLabel
+          Left = 53
+          Top = 64
+          Width = 106
+          Height = 13
+          Caption = #1055#1077#1088#1077#1074#1086#1076' '#1085#1072' '#1088#1091#1089#1089#1082#1080#1081':'
+        end
+        object lbTranslateToEnglish: TLabel
+          Left = 35
+          Top = 88
+          Width = 124
+          Height = 13
+          Caption = #1055#1077#1088#1077#1074#1086#1076' '#1085#1072' '#1072#1085#1075#1083#1080#1081#1089#1082#1080#1081':'
+        end
+        object hkTranslateToUpperCase: THotKey
+          Left = 168
+          Top = 14
+          Width = 91
+          Height = 19
+          HotKey = 32833
+          TabOrder = 0
+        end
+        object hkTranslateToLowerCase: THotKey
+          Left = 168
+          Top = 38
+          Width = 91
+          Height = 19
+          HotKey = 32833
+          TabOrder = 1
+        end
+        object hkTranslateToRussian: THotKey
+          Left = 168
+          Top = 62
+          Width = 91
+          Height = 19
+          HotKey = 32833
+          TabOrder = 2
+        end
+        object hkTranslateToEnglish: THotKey
+          Left = 168
+          Top = 86
+          Width = 91
+          Height = 19
+          HotKey = 32833
+          TabOrder = 3
+        end
+      end
+      object TPage
+        Left = 0
+        Top = 0
+        Caption = 'pn7'
+        object lbDayDoverOffset: TLabel
+          Left = 10
+          Top = 112
+          Width = 193
+          Height = 26
+          Alignment = taRightJustify
+          Caption = #1057#1084#1077#1097#1077#1085#1080#1077' '#1074' '#1076#1085#1103#1093' '#1086#1090#1085#1086#1089#1080#1090#1077#1083#1100#1085#1086' '#1076#1072#1090#1099' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1076#1086#1074#1077#1088#1077#1085#1085#1086#1089#1090#1080
+          WordWrap = True
+        end
+        object chbViewDateInListView: TCheckBox
+          Left = 5
+          Top = 6
+          Width = 324
+          Height = 17
+          Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1086#1087#1080#1089#1072#1085#1080#1077', '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1080' '#1076#1088#1091#1075#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+          TabOrder = 0
+        end
+        object chbViewPath: TCheckBox
+          Left = 5
+          Top = 23
+          Width = 228
+          Height = 17
+          Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1087#1091#1090#1100' '#1074' '#1076#1077#1088#1077#1074#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+          TabOrder = 1
+        end
+        object chbRefreshForm: TCheckBox
+          Left = 5
+          Top = 57
+          Width = 252
+          Height = 17
+          Caption = #1054#1073#1085#1086#1074#1083#1103#1090#1100' '#1092#1086#1088#1084#1091' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+          TabOrder = 3
+        end
+        object chbChangeDocument: TCheckBox
+          Left = 5
+          Top = 40
+          Width = 252
+          Height = 17
+          Caption = #1048#1079#1084#1077#1085#1103#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1074' '#1088#1077#1078#1080#1084#1077' '#1087#1088#1086#1089#1084#1086#1090#1088#1072
+          TabOrder = 2
+          OnClick = chbChangeDocumentClick
+        end
+        object chbDeleteQuiteInReestr: TCheckBox
+          Left = 5
+          Top = 74
+          Width = 252
+          Height = 17
+          Caption = #1059#1076#1072#1083#1103#1090#1100' '#1079#1072#1087#1080#1089#1080' '#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1089#1086#1074#1089#1077#1084
+          TabOrder = 4
+        end
+        object chbViewDeleteQuiteInReestr: TCheckBox
+          Left = 5
+          Top = 91
+          Width = 324
+          Height = 17
+          Caption = #1054#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1079#1072#1087#1080#1089#1080' '#1074' '#1088#1077#1077#1089#1090#1088#1077', '#1087#1086#1084#1077#1095#1077#1085#1085#1099#1077' '#1082#1072#1082' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+          TabOrder = 5
+          OnClick = chbViewDeleteQuiteInReestrClick
+        end
+        object edDayDoverOffset: TEdit
+          Left = 213
+          Top = 116
+          Width = 72
+          Height = 21
+          ReadOnly = True
+          TabOrder = 6
+          Text = '-1'
+        end
+        object udDayDoverOffset: TUpDown
+          Left = 285
+          Top = 116
+          Width = 16
+          Height = 21
+          Associate = edDayDoverOffset
+          Min = -100
+          Position = -1
+          TabOrder = 7
+          Thousands = False
+        end
+        object chbDisableDefaultOnForm: TCheckBox
+          Left = 5
+          Top = 146
+          Width = 212
+          Height = 17
+          Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1082#1085#1086#1087#1082#1091' '#1054#1050' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+          TabOrder = 8
+        end
+        object chbViewHintOnFocus: TCheckBox
+          Left = 5
+          Top = 163
+          Width = 324
+          Height = 17
+          Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' '#1087#1088#1080' '#1087#1086#1087#1072#1076#1077#1085#1080#1080' '#1092#1086#1082#1091#1089#1072' '#1085#1072' '#1101#1083#1077#1084#1077#1085#1090
+          TabOrder = 9
+        end
+        object chbViewReminder: TCheckBox
+          Left = 5
+          Top = 180
+          Width = 300
+          Height = 17
+          Caption = #1054#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1085#1072#1087#1086#1084#1080#1085#1072#1085#1080#1103
+          TabOrder = 10
+        end
+        object chbAutoUpdateWords: TCheckBox
+          Left = 5
+          Top = 197
+          Width = 308
+          Height = 17
+          Caption = #1040#1074#1090#1086' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1090#1077#1082#1089#1090#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1074' '#1088#1077#1077#1089#1090#1088#1077
+          TabOrder = 11
+        end
+        object chbViewWhoCert: TCheckBox
+          Left = 5
+          Top = 214
+          Width = 308
+          Height = 17
+          Caption = #1042#1099#1073#1086#1088' '#1085#1086#1090#1072#1088#1080#1091#1089#1072'-'#1087#1086#1084#1086#1097#1085#1080#1082#1072' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+          TabOrder = 12
+        end
+        object chbDocumentLock: TCheckBox
+          Left = 5
+          Top = 231
+          Width = 308
+          Height = 17
+          Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1073#1083#1086#1082#1080#1088#1086#1074#1082#1080' '#1085#1086#1084#1077#1088#1086#1074' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+          TabOrder = 13
+        end
+        object chbNotViewHereditaryDeal: TCheckBox
+          Left = 5
+          Top = 248
+          Width = 324
+          Height = 17
+          Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1082#1085#1086#1087#1082#1091' '#1085#1072#1089#1083#1077#1076#1089#1090#1074#1077#1085#1085#1099#1077' '#1076#1077#1083#1072
+          TabOrder = 14
+        end
+        object chbExpandConst: TCheckBox
+          Left = 5
+          Top = 265
+          Width = 308
+          Height = 17
+          Caption = #1056#1072#1079#1074#1086#1088#1072#1095#1080#1074#1072#1090#1100' '#1082#1086#1085#1089#1090#1072#1085#1090#1099' '#1074' '#1088#1077#1078#1080#1084#1077' '#1055#1088#1086#1089#1084#1086#1090#1088
+          TabOrder = 15
+          OnClick = chbExpandConstClick
+        end
+        object chbQuestionBackup: TCheckBox
+          Left = 5
+          Top = 282
+          Width = 284
+          Height = 17
+          Caption = #1057#1087#1088#1072#1096#1080#1074#1072#1090#1100' '#1086' '#1089#1086#1079#1076#1072#1085#1080#1080' '#1072#1088#1093#1080#1074#1072' '#1073#1072#1079#1099' '#1076#1072#1085#1085#1099#1093
+          TabOrder = 16
+          OnClick = chbExpandConstClick
+        end
+        object chbSelectDatabase: TCheckBox
+          Left = 5
+          Top = 299
+          Width = 292
+          Height = 17
+          Caption = #1042#1099#1073#1080#1088#1072#1090#1100' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077
+          TabOrder = 17
+        end
+        object chbCheckEmptySumm: TCheckBox
+          Left = 6
+          Top = 316
+          Width = 283
+          Height = 17
+          Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1091#1089#1090#1086#1081' '#1089#1091#1084#1084#1099' '#1076#1083#1103' '#1072#1082#1090#1080#1074#1085#1099#1093
+          TabOrder = 18
+        end
+      end
+    end
+    object pnTopStatus: TPanel
+      Left = 5
+      Top = 5
+      Width = 353
+      Height = 30
+      Align = alTop
+      BevelOuter = bvNone
+      BorderWidth = 5
+      TabOrder = 1
+      object lbTopStatus: TLabel
+        Left = 5
+        Top = 5
+        Width = 343
+        Height = 20
+        Align = alClient
+        Alignment = taCenter
+        Caption = 'lbTopStatus'
+        Color = clBtnShadow
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        Layout = tlCenter
+        ExplicitWidth = 69
+        ExplicitHeight = 13
+      end
+    end
+  end
+  object od: TOpenDialog
+    Options = [ofEnableSizing]
+    Left = 46
+    Top = 99
+  end
+end

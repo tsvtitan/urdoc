@@ -1,0 +1,28 @@
+#pragma code_page(1251)
+
+STRINGTABLE
+BEGIN
+
+65504,  "Grid requested to display more than 256 columns"
+65505,  "Remote Login"
+65506,  "Data Bindings..."
+
+65520,  "Первая запись"
+65521,  "Предыдущая запись"
+65522,  "Следующая запись"
+65523,  "Последняя запись"
+65524,  "Вставить запись"
+65525,  "Удалить запись"
+65526,  "Изменить запись"
+65527,  "Подтвердить изменения"
+65528,  "Отменить изменения"
+65529,  "Confirm"
+65530,  "Обновить данные"
+65531,  "Удалить запись?"
+65532,  "Удалить все записи?"
+65533,  "Operation not allowed in a DBCtrlGrid"
+65534,  "Control cannot be used in a DBCtrlGrid"
+65535,  "Property already defined by lookup field"
+
+
+END

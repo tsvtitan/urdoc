@@ -1,0 +1,119 @@
+unit SeoDbConsts;
+
+interface
+
+const
+  Db_MaxName=100;
+  Db_MaxNote=250;
+  Db_MaxUniqueId=32;
+  Db_MaxFileName=1000;
+
+resourcestring
+  SDb_Name='NAME';
+  SDb_Value='VALUE';
+  SDb_Note='NOTE';
+  SDb_Type='TYPE';
+  SDb_Sync='SYNC';
+  SDb_Hash='HASH';
+  SDb_Flag='FLAG';
+  SDb_NewsId='NEWS_ID';
+  SDb_DocFiles='DOC_FILES';
+  SDb_FilesId='FILES_ID';
+  SDb_Data='DATA';
+  SDb_DateBegin='DATE_BEGIN';
+  SDb_DateEnd='DATE_END';
+  SDb_Path='PATH';
+  SDb_Command='COMMAND';
+  SDb_PriceId='PRICE_ID';
+  SDb_DatePrice='DATE_PRICE';
+  SDb_ClientName='CLIENT_NAME';
+  SDb_IsOrders='IS_ORDERS';
+  SDb_TypeName='TYPE_NAME';
+  SDb_TypeNote='TYPE_NOTE';
+  SDb_TypeFieldsFilter='TYPE_FIELDS_FILTER';
+  SDb_TypeFieldFind='TYPE_FIELD_FIND';
+  SDb_TypeFieldPrice='TYPE_FIELD_PRICE';
+  SDb_TypeFieldKey='TYPE_FIELD_KEY';
+  SDb_TypeFieldAmount='TYPE_FIELD_AMOUNT';
+  SDb_TypeFieldProduct='TYPE_FIELD_PRODUCT';
+  SDb_Columns='COLUMNS';
+  SDb_OutView='OUT_VIEW';
+  SDb_Width='WIDTH';
+  SDb_Format='FORMAT';
+  SDb_Alignment='ALIGNMENT';
+  SDb_OrdersAmount='ORDERS_AMOUNT';
+  SDb_Phone='PHONE';
+  SDb_DateCreate='DATE_CREATE';
+  SDb_DateChange='DATE_CHANGE';
+  SDb_DatePriceCreate='DATE_PRICE_CREATE';
+  SDb_DateSend='DATE_SEND';
+  SDb_ProductId='PRODUCT_ID';
+  SDb_Amount='AMOUNT';
+  SDb_HashColumns='HASH_COLUMNS';
+  SDb_HashData='HASH_DATA';
+  SDb_ClientPath='CLIENT_PATH';
+  SDb_ServerPath='SERVER_PATH';
+  SDb_ConnectionType='CONNECTION_TYPE';
+  SDb_DisplayName='DISPLAY_NAME';
+  SDb_ServerName='SERVER_NAME';
+  SDb_ServerPort='SERVER_PORT';
+  SDb_Security='SECURITY';
+  SDb_Certificate='CERTIFICATE';
+  SDb_Document='DOCUMENT';
+  SDb_UserName='USER_NAME';
+  SDb_UserPass='USER_PASS';
+  SDb_Used='USED';
+  SDb_RetryCount='RETRY_COUNT';
+  SDb_RemoteAuto='REMOTE_AUTO';
+  SDb_RemoteName='REMOTE_NAME';
+  SDb_ModemUserName='MODEM_USER_NAME';
+  SDb_ModemUserPass='MODEM_USER_PASS';
+  SDb_ModemDomain='MODEM_DOMAIN';
+  SDb_ModemPhone='MODEM_PHONE';
+  SDb_ProxyName='PROXY_NAME';
+  SDb_ProxyPort='PROXY_PORT';
+  SDb_ProxyUserName='PROXY_USER_NAME';
+  SDB_ProxyUserPass='PROXY_USER_PASS';
+  SDb_ProxyByPass='PROXY_BY_PASS';
+  SDb_Sort='SORT';
+  SDb_ProductPriceId='PRODUCT_PRICE_ID';
+  SDb_OrdersId='ORDERS_ID';
+  SDb_Text='TEXT';
+  SDb_Params='PARAMS';
+
+
+  SDb_ParamSplash='Заставка';
+  SDb_ParamLogo='Логотип';
+  SDb_ParamAdminPass='Пароль на настройки';
+  SDb_ParamConnections='Соединения';
+  SDb_ParamAbout='О программе';
+  SDb_ParamSupplier='Поставщик';
+  SDb_ParamClientCount='Количество клиентов';
+  SDb_ParamManagerCount='Количество менеджеров';
+  SDb_ParamViewerCount='Количество операторов';
+  SDb_ParamAdminCount='Количество администраторов';
+  SDb_ParamIpAddress='Лицензии на IP адреса';
+  SDb_ParamNews='Новости';
+  SDb_ParamPrices='Прайс-листы';
+  SDb_ParamManagers='Менеджеры';
+  SDb_ParamClientInfo='Информация о клиенте';
+  SDb_ParamOrders='Заявки';
+  SDb_ParamTimeOutPrices='Время старения';
+  SDb_ParamProducts='Номенклатура';
+  SDb_ParamFilesOut='Исходящие файлы';
+  SDb_ParamPatternOrders='Шаблон заявки';
+  SDb_ParamFormatProgramVersion='Формат версии программы';
+  SDb_ParamFormatProductVersion='Формат версии продукта';
+  SDb_ParamCompanyInfo='Информация о фирме разработчике';
+  SDb_ParamTableInstall='Таблица установки';
+  SDb_ParamCompany='Компания';
+  SDb_ParamPhonesAndSite='Телефоны и сайт';
+  SDb_ParamProgramm='Программа';
+  SDb_ParamKey='Ключ';
+  SDb_ParamLicense='Лицензии';
+  SDb_ParamUserName='Пользователь';
+  SDb_ParamPassword='Пользователь';
+
+implementation
+
+end.

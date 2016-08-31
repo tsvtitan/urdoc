@@ -1,0 +1,220 @@
+================= Logging started at 7/17/2003 05:36:22 ==================
+Created release folders
+InstallShield (R) Script Compiler
+Version 7.3.0.131
+Copyright (C) 1990-2001 InstallShield Software Corporation
+
+Compiling...
+Setup.rul
+Linking...
+Setup.inx - 0 error(s), 0 warning(s)
+AdminExecuteSequence table successfully built
+AdminUISequence table successfully built
+AdvtExecuteSequence table successfully built
+AdvtUISequence table successfully built
+InstallExecuteSequence table successfully built
+InstallUISequence table successfully built
+Directory table successfully built
+Feature table successfully built
+FeatureComponents table successfully built
+Component table successfully built
+Loading File table
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Что подтверждает право собственности.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Удостоверительные надписи.rtf"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Список стандартных полей.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш MS Word.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш MS Windows.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Родственные связи наследника с наследодателем.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Правоустанавливающие документы.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\План обучения.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Переводчики.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\ПОЛ.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\ПАМЯТКА.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\ОВД районов.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\На какой язык перевод.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\НОТАРИУСЫ Г. КРАСНОЯРСКА.TXT"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Могут-не могут.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Количество листов.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Кем выдан правоустанавливающий док.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Инструкция по пользованию программой.doc"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Инвалид 1 группы-инвалидом не является.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Инвалид 1 группы- инвалидом не является.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Все поля.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\license.rtf"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\Языки.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\help\удовлетвор-неудовл.txt"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\program\patch.exe"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\program\tsvlib.dll"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\program\Urdoc.exe"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\program\Urdocc.exe"
+	** Error: -6103: Could not find file "E:\Install\АС Нотариус\АС Нотариус\files\data\URDOC.GDB"
+Building File table
+File table successfully built
+Building MsiFileHash table
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\data\URDOC.GDB not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\program\Urdoc.exe not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\program\Urdocc.exe not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\ПОЛ.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Языки.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\ПАМЯТКА.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Все поля.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Инвалид 1 группы- инвалидом не является.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Инвалид 1 группы-инвалидом не является.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\НОТАРИУСЫ Г. КРАСНОЯРСКА.TXT not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\ОВД районов.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Переводчики.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\План обучения.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Могут-не могут.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Количество листов.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\удовлетвор-неудовл.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\На какой язык перевод.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш MS Windows.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш MS Word.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Список стандартных полей.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Удостоверительные надписи.rtf not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Инструкция по пользованию программой.doc not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Кем выдан правоустанавливающий док.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Правоустанавливающие документы.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Родственные связи наследника с наследодателем.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\Что подтверждает право собственности.txt not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\help\license.rtf not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\program\patch.exe not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+	** Error: -6271: File E:\Install\АС Нотариус\АС Нотариус\files\program\tsvlib.dll not found. An error occurred building the MsiFileHash table record for this file. Verify that the file exists in the specified location.
+MsiFileHash table successfully built
+Class table successfully built
+Extension table successfully built
+ODBCDataSource table successfully built
+ODBCDriver table successfully built
+ActionText table successfully built
+AppSearch table successfully built
+BindImage table successfully built
+CCPSearch table successfully built
+Condition table successfully built
+AppId table successfully built
+Property table successfully built
+BBControl table successfully built
+Billboard table successfully built
+Binary table successfully built
+CompLocator table successfully built
+Complus table successfully built
+ControlCondition table successfully built
+ControlEvent table successfully built
+CreateFolder table successfully built
+CustomAction table successfully built
+Error table successfully built
+DrLocator table successfully built
+DuplicateFile table successfully built
+Environment table successfully built
+EventMapping table successfully built
+FileSFPCatalog table successfully built
+Font table successfully built
+IniFile table successfully built
+IniLocator table successfully built
+IsolatedComponent table successfully built
+ISSelfReg table successfully built
+LaunchCondition table successfully built
+LockPermissions table successfully built
+Media table successfully built
+MIME table successfully built
+MoveFile table successfully built
+MsiAssembly table successfully built
+MsiAssemblyName table successfully built
+MsiDigitalCertificate table successfully built
+MsiDigitalSignature table successfully built
+ODBCAttribute table successfully built
+ODBCSourceAttribute table successfully built
+ODBCTranslator table successfully built
+Patch table successfully built
+PatchPackage table successfully built
+ProgId table successfully built
+PublishComponent table successfully built
+Registry table successfully built
+RegLocator table successfully built
+RemoveFile table successfully built
+RemoveIniFile table successfully built
+RemoveRegistry table successfully built
+ReserveCost table successfully built
+SelfReg table successfully built
+ServiceControl table successfully built
+ServiceInstall table successfully built
+SFPCatalog table successfully built
+Shortcut table successfully built
+Signature table successfully built
+TextStyle table successfully built
+TypeLib table successfully built
+UIText table successfully built
+Upgrade table successfully built
+Verb table successfully built
+_Validation table successfully built
+Searching project for extract-at-build components...
+Dialog AdminChangeFolder for language Russian built
+Dialog AdminNetworkLocation for language Russian built
+Dialog AdminWelcome for language Russian built
+Dialog CancelSetup for language Russian built
+Dialog CustomSetup for language Russian built
+Dialog CustomSetupTips for language Russian built
+Dialog CustomerInformation for language Russian built
+Dialog DatabaseFolder for language Russian built
+Dialog DestinationFolder for language Russian built
+Dialog DiskSpaceRequirements for language Russian built
+Dialog FilesInUse for language Russian built
+Dialog InstallChangeFolder for language Russian built
+Dialog InstallWelcome for language Russian built
+Dialog LicenseAgreement for language Russian built
+Dialog MaintenanceType for language Russian built
+Dialog MaintenanceWelcome for language Russian built
+Dialog OutOfSpace for language Russian built
+Dialog PatchWelcome for language Russian built
+Dialog ReadyToInstall for language Russian built
+Dialog ReadyToRemove for language Russian built
+Dialog RunAllDialog for language Russian built
+Dialog SetupCompleteError for language Russian built
+Dialog SetupCompleteSuccess for language Russian built
+Dialog SetupError for language Russian built
+Dialog SetupInitialization for language Russian built
+Dialog SetupInterrupted for language Russian built
+Dialog SetupProgress for language Russian built
+Dialog SetupResume for language Russian built
+Dialog SetupType for language Russian built
+Dialog SplashBitmap for language Russian built
+Resolving strings...
+Language Russian built
+Building CAB files...
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\data\URDOC.GDB" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Что подтверждает право собственности.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Удостоверительные надписи.rtf" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Список стандартных полей.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш MS Word.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Список горячих клавиш MS Windows.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Родственные связи наследника с наследодателем.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Правоустанавливающие документы.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\План обучения.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Переводчики.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\ПОЛ.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\ПАМЯТКА.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\ОВД районов.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\На какой язык перевод.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\НОТАРИУСЫ Г. КРАСНОЯРСКА.TXT" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Могут-не могут.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Количество листов.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Кем выдан правоустанавливающий док.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Инструкция по пользованию программой.doc" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Инвалид 1 группы-инвалидом не является.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Инвалид 1 группы- инвалидом не является.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Все поля.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\license.rtf" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\Языки.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\help\удовлетвор-неудовл.txt" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\program\Urdoc.exe" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\program\patch.exe" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\program\tsvlib.dll" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+	** Error: -1501: Could not compress "E:\Install\АС Нотариус\АС Нотариус\files\program\Urdocc.exe" into "E:\Install\АС Нотариус\АС Нотариус\Product Configuration 1\Release 1\DiskImages\DISK1\Data1.cab"
+Data1.cab built
+Files built
+Media table successfully built
+Setup.exe created
+Product Configuration 1\Release 1 build completed with 90 errors, 0 warnings
+================= Logging stopped at 7/17/2003 05:37:10 ==================

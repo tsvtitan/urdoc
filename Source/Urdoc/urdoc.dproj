@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{6bd11afe-79d1-4386-9dd0-20f2c20d5ea9}</ProjectGuid>
+    <MainSource>urdoc.dpr</MainSource>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_EnabledPackages>true</DCC_EnabledPackages>
+    <DCC_UsePackage>VCL;RTL;SOAPRTL;DBRTL;VCLDB;XMLRTL;INET;DSNAP</DCC_UsePackage>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>U:\Bin\urdoc.exe</DCC_DependencyCheckOutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_ExeOutput>U:\Bin</DCC_ExeOutput>
+    <DCC_Define>RELEASE</DCC_Define>
+    <DCC_SYMBOL_DEPRECATED>False</DCC_SYMBOL_DEPRECATED>
+    <DCC_SYMBOL_LIBRARY>False</DCC_SYMBOL_LIBRARY>
+    <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
+    <DCC_UNIT_LIBRARY>False</DCC_UNIT_LIBRARY>
+    <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
+    <DCC_UNIT_DEPRECATED>False</DCC_UNIT_DEPRECATED>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_ExeOutput>U:\Bin</DCC_ExeOutput>
+    <DCC_Define>DEBUG</DCC_Define>
+    <DCC_SYMBOL_DEPRECATED>False</DCC_SYMBOL_DEPRECATED>
+    <DCC_SYMBOL_LIBRARY>False</DCC_SYMBOL_LIBRARY>
+    <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
+    <DCC_UNIT_LIBRARY>False</DCC_UNIT_LIBRARY>
+    <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
+    <DCC_UNIT_DEPRECATED>False</DCC_UNIT_DEPRECATED>
+    <DCC_UnitSearchPath>U:\Source\Urdoc;U:\Source\United;U:\Source\United\Rx\Units;U:\Source\United\IPHlpApi\Pas;U:\Source\United\Dws\Source;U:\Source\United\SynEdit\Source;U:\Source\United\Indy\Core;U:\Source\United\Indy\Protocols;U:\Source\United\Indy\System;U:\Source\United\EasyNet</DCC_UnitSearchPath>
+    <DCC_ResourcePath>U:\Source\Urdoc;U:\Source\United;U:\Source\United\Rx\Units;U:\Source\United\IPHlpApi\Pas;U:\Source\United\Dws\Source;U:\Source\United\SynEdit\Source;U:\Source\United\Indy\Core;U:\Source\United\Indy\Protocols;U:\Source\United\Indy\System;U:\Source\United\EasyNet</DCC_ResourcePath>
+    <DCC_ObjPath>U:\Source\Urdoc;U:\Source\United;U:\Source\United\Rx\Units;U:\Source\United\IPHlpApi\Pas;U:\Source\United\Dws\Source;U:\Source\United\SynEdit\Source;U:\Source\United\Indy\Core;U:\Source\United\Indy\Protocols;U:\Source\United\Indy\System;U:\Source\United\EasyNet</DCC_ObjPath>
+    <DCC_IncludePath>U:\Source\Urdoc;U:\Source\United;U:\Source\United\Rx\Units;U:\Source\United\IPHlpApi\Pas;U:\Source\United\Dws\Source;U:\Source\United\SynEdit\Source;U:\Source\United\Indy\Core;U:\Source\United\Indy\Protocols;U:\Source\United\Indy\System;U:\Source\United\EasyNet</DCC_IncludePath>
+    <DCC_SYMBOL_EXPERIMENTAL>False</DCC_SYMBOL_EXPERIMENTAL>
+    <DCC_TYPEINFO_IMPLICITLY_ADDED>False</DCC_TYPEINFO_IMPLICITLY_ADDED>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+    <BorlandProject>
+<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters><Parameters Name="RunParams">/config urdoc.ini /admin</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">4</VersionInfo><VersionInfo Name="MinorVer">5</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">11</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1049</VersionInfo><VersionInfo Name="CodePage">1251</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">NextSoft</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Нотариус+</VersionInfoKeys><VersionInfoKeys Name="FileVersion">4.5.0.11</VersionInfoKeys><VersionInfoKeys Name="InternalName">urdoc.exe</VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">NextSoft</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks">NextSoft</VersionInfoKeys><VersionInfoKeys Name="OriginalFilename">urdoc.exe</VersionInfoKeys><VersionInfoKeys Name="ProductName">Нотариус+</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">4.5</VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">urdoc.dpr</Source></Source><Excluded_Packages>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <Excluded_Packages Name="C:\Program Files\Clever Components\Database Comparer\Delphi 2007\Lib\ComparerD11.bpl">Database Comparer VCL</Excluded_Packages>
+      <Excluded_Packages Name="C:\Program Files\Clever Components\Database Comparer\Delphi 2007\Lib\ComparerAdoD11.bpl">Database Comparer VCL ADO</Excluded_Packages>
+      <Excluded_Packages Name="C:\Program Files\Clever Components\Database Comparer\Delphi 2007\Lib\ComparerBdeD11.bpl">Database Comparer VCL BDE</Excluded_Packages>
+    </Excluded_Packages></Delphi.Personality></BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+  <ItemGroup>
+    <DelphiCompile Include="urdoc.dpr">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <RcCompile Include="blank1.rc">
+      <Form>blank1.res</Form>
+    </RcCompile>
+    <DCCReference Include="..\United\UinUtils.pas" />
+    <DCCReference Include="antAngleLabel.pas" />
+    <DCCReference Include="BisHint.pas" />
+    <DCCReference Include="BisHintEx.pas" />
+    <DCCReference Include="DatabaseEditFm.pas">
+      <Form>DatabaseEditForm</Form>
+    </DCCReference>
+    <DCCReference Include="DsnUnit.pas" />
+    <DCCReference Include="FIOPadeg.pas" />
+    <DCCReference Include="Marquee.pas" />
+    <DCCReference Include="mcompres.pas" />
+    <DCCReference Include="ReceptionFm.pas">
+      <Form>ReceptionForm</Form>
+    </DCCReference>
+    <DCCReference Include="RXCALC.PAS" />
+    <DCCReference Include="RxMemDS.pas" />
+    <DCCReference Include="ScriptEditFm.pas">
+      <Form>ScriptEditForm</Form>
+    </DCCReference>
+    <DCCReference Include="SeoDb.pas" />
+    <DCCReference Include="SeoDbConsts.pas" />
+    <DCCReference Include="tsvGradientLabel.pas" />
+    <DCCReference Include="tsvGrids.pas" />
+    <DCCReference Include="tsvHintEx.pas" />
+    <DCCReference Include="tsvInterbase.pas" />
+    <DCCReference Include="UAbout.pas">
+      <Form>fmAbout</Form>
+    </DCCReference>
+    <DCCReference Include="UAdjust.pas" />
+    <DCCReference Include="UAlignPalette.pas">
+      <Form>AlignPalette</Form>
+    </DCCReference>
+    <DCCReference Include="UCaseReestr.pas">
+      <Form>fmCaseReestr</Form>
+    </DCCReference>
+    <DCCReference Include="UCheckSum.pas" />
+    <DCCReference Include="UCreateCtrl.pas">
+      <Form>fmCreateCtrl</Form>
+    </DCCReference>
+    <DCCReference Include="UDm.pas">
+      <Form>Dm</Form>
+      <DesignClass>TDataModule</DesignClass>
+    </DCCReference>
+    <DCCReference Include="UDocReestr.pas">
+      <Form>fmDocReestr</Form>
+    </DCCReference>
+    <DCCReference Include="UDocReestrEdit.pas">
+      <Form>fmDocReestrEdit</Form>
+    </DCCReference>
+    <DCCReference Include="UDocTree.pas">
+      <Form>fmDocTree</Form>
+    </DCCReference>
+    <DCCReference Include="UDocTreeCarring.pas">
+      <Form>fmDocTreeCarring</Form>
+    </DCCReference>
+    <DCCReference Include="UEditBlank.pas">
+      <Form>fmEditBlank</Form>
+    </DCCReference>
+    <DCCReference Include="UEditCase.pas">
+      <Form>fmEditCase</Form>
+    </DCCReference>
+    <DCCReference Include="UEditChamber.pas">
+      <Form>fmEditChamber</Form>
+    </DCCReference>
+    <DCCReference Include="UEditColor.pas">
+      <Form>fmEditColor</Form>
+    </DCCReference>
+    <DCCReference Include="UEditConst.pas">
+      <Form>fmEditConst</Form>
+    </DCCReference>
+    <DCCReference Include="UEditGraphVisit.pas">
+      <Form>fmEditGraphVisit</Form>
+    </DCCReference>
+    <DCCReference Include="UEditHereditaryDeal.pas">
+      <Form>fmEditHereditaryDeal</Form>
+    </DCCReference>
+    <DCCReference Include="UEditHereditaryDocum.pas">
+      <Form>fmEditHereditaryDocum</Form>
+    </DCCReference>
+    <DCCReference Include="UEditLicense.pas">
+      <Form>fmEditLicense</Form>
+    </DCCReference>
+    <DCCReference Include="UEditMarkCar.pas">
+      <Form>fmEditMarkCar</Form>
+    </DCCReference>
+    <DCCReference Include="UEditMaskEdit.pas">
+      <Form>fmEditMaskEdit</Form>
+    </DCCReference>
+    <DCCReference Include="UEditNotarialAction.pas">
+      <Form>fmEditNotarialAction</Form>
+    </DCCReference>
+    <DCCReference Include="UEditNotarius.pas">
+      <Form>fmEditNotarius</Form>
+    </DCCReference>
+    <DCCReference Include="UEditNotary.pas">
+      <Form>fmEditNotary</Form>
+    </DCCReference>
+    <DCCReference Include="UEditOperation.pas">
+      <Form>fmEditOperation</Form>
+    </DCCReference>
+    <DCCReference Include="UEditPeople.pas">
+      <Form>fmEditPeople</Form>
+    </DCCReference>
+    <DCCReference Include="UEditReminder.pas">
+      <Form>fmEditReminder</Form>
+    </DCCReference>
+    <DCCReference Include="UEditRenovation.pas">
+      <Form>fmEditRenovation</Form>
+    </DCCReference>
+    <DCCReference Include="UEditRuleForElement.pas">
+      <Form>fmEditRuleForElement</Form>
+    </DCCReference>
+    <DCCReference Include="UEditSubs.pas">
+      <Form>fmEditSubs</Form>
+    </DCCReference>
+    <DCCReference Include="UEditSubsValue.pas">
+      <Form>fmEditSubsValue</Form>
+    </DCCReference>
+    <DCCReference Include="UEditSumm.pas">
+      <Form>fmEditSumm</Form>
+    </DCCReference>
+    <DCCReference Include="UEditText.pas">
+      <Form>fmEditText</Form>
+    </DCCReference>
+    <DCCReference Include="UEditTypeReestr.pas">
+      <Form>fmEditTypeReestr</Form>
+    </DCCReference>
+    <DCCReference Include="UEditUsers.pas">
+      <Form>fmEditUsers</Form>
+    </DCCReference>
+    <DCCReference Include="UEnterPeriod.pas">
+      <Form>fmEnterPeriod</Form>
+    </DCCReference>
+    <DCCReference Include="UFind.pas">
+      <Form>fmFind</Form>
+    </DCCReference>
+    <DCCReference Include="UHint.pas">
+      <Form>fmChangeHint</Form>
+    </DCCReference>
+    <DCCReference Include="UInputNumReestr.pas">
+      <Form>fmInputNumber</Form>
+    </DCCReference>
+    <DCCReference Include="UInputSortNum.pas">
+      <Form>fmInputSortNum</Form>
+    </DCCReference>
+    <DCCReference Include="ULinksEdit.pas">
+      <Form>fmLinksEdit</Form>
+    </DCCReference>
+    <DCCReference Include="UListHereditaryDealReport.pas">
+      <Form>fmListHereditaryDeal</Form>
+    </DCCReference>
+    <DCCReference Include="ULogin.pas">
+      <Form>fmLogin</Form>
+    </DCCReference>
+    <DCCReference Include="UMain.pas">
+      <Form>fmMain</Form>
+    </DCCReference>
+    <DCCReference Include="UNewControls.pas" />
+    <DCCReference Include="UNewDbGrids.pas" />
+    <DCCReference Include="UNewForm.pas">
+      <Form>fmNewForm</Form>
+    </DCCReference>
+    <DCCReference Include="UNewHint.pas" />
+    <DCCReference Include="UNewOperation.pas">
+      <Form>fmNewOperation</Form>
+    </DCCReference>
+    <DCCReference Include="UObjInsp.pas">
+      <Form>fmObjInsp</Form>
+    </DCCReference>
+    <DCCReference Include="UOptions.pas">
+      <Form>fmOptions</Form>
+    </DCCReference>
+    <DCCReference Include="UPatchUtil.pas">
+      <Form>fmPatchUtil</Form>
+    </DCCReference>
+    <DCCReference Include="UProgress.pas">
+      <Form>fmProgress</Form>
+    </DCCReference>
+    <DCCReference Include="URBBlanks.pas">
+      <Form>fmBlanks</Form>
+    </DCCReference>
+    <DCCReference Include="URBCase.pas">
+      <Form>fmCase</Form>
+    </DCCReference>
+    <DCCReference Include="URBChamber.pas">
+      <Form>fmChamber</Form>
+    </DCCReference>
+    <DCCReference Include="URBColor.pas">
+      <Form>fmColor</Form>
+    </DCCReference>
+    <DCCReference Include="URBConst.pas">
+      <Form>fmConst</Form>
+    </DCCReference>
+    <DCCReference Include="URBGraphVisit.pas">
+      <Form>fmGraphVisit</Form>
+    </DCCReference>
+    <DCCReference Include="URBHereditaryDeal.pas">
+      <Form>fmHereditaryDeal</Form>
+    </DCCReference>
+    <DCCReference Include="URBLicense.pas">
+      <Form>fmLicense</Form>
+    </DCCReference>
+    <DCCReference Include="URBMarkCar.pas">
+      <Form>fmMarkCar</Form>
+    </DCCReference>
+    <DCCReference Include="URBMask.pas">
+      <Form>fmMask</Form>
+    </DCCReference>
+    <DCCReference Include="URBNotarialAction.pas">
+      <Form>fmRBNotarialAction</Form>
+    </DCCReference>
+    <DCCReference Include="URBNotarius.pas">
+      <Form>fmNotarius</Form>
+    </DCCReference>
+    <DCCReference Include="URBNotary.pas">
+      <Form>fmNotary</Form>
+    </DCCReference>
+    <DCCReference Include="URBOperation.pas">
+      <Form>fmOperation</Form>
+    </DCCReference>
+    <DCCReference Include="URBPeople.pas">
+      <Form>fmRBPeople</Form>
+    </DCCReference>
+    <DCCReference Include="URBReminder.pas">
+      <Form>fmRBReminder</Form>
+    </DCCReference>
+    <DCCReference Include="URBRenovation.pas">
+      <Form>fmRenovation</Form>
+    </DCCReference>
+    <DCCReference Include="URBRuleForElement.pas">
+      <Form>fmRBRuleForElement</Form>
+    </DCCReference>
+    <DCCReference Include="URBSubs.pas">
+      <Form>fmSubs</Form>
+    </DCCReference>
+    <DCCReference Include="URBSubsValue.pas">
+      <Form>fmSubsValue</Form>
+    </DCCReference>
+    <DCCReference Include="URBTypeReestr.pas">
+      <Form>fmTypeReestr</Form>
+    </DCCReference>
+    <DCCReference Include="URBUsers.pas">
+      <Form>fmUsers</Form>
+    </DCCReference>
+    <DCCReference Include="URenameTabSheet.pas">
+      <Form>fmRenameTabSheet</Form>
+    </DCCReference>
+    <DCCReference Include="USearchDoc.pas">
+      <Form>fmSearchDoc</Form>
+    </DCCReference>
+    <DCCReference Include="USearchDocEdit.pas">
+      <Form>fmSearchDocEdit</Form>
+    </DCCReference>
+    <DCCReference Include="USearchNumInReestr.pas">
+      <Form>fmSearchNumInReestr</Form>
+    </DCCReference>
+    <DCCReference Include="USearchReestr.pas">
+      <Form>fmSearchReestr</Form>
+    </DCCReference>
+    <DCCReference Include="USearchReestrEdit.pas">
+      <Form>fmSearchReestrEdit</Form>
+    </DCCReference>
+    <DCCReference Include="USelectDatabase.pas">
+      <Form>fmSelectDatabase</Form>
+    </DCCReference>
+    <DCCReference Include="USelectNotarius.pas">
+      <Form>fmSelectNoarius</Form>
+    </DCCReference>
+    <DCCReference Include="UServerConnect.pas">
+      <Form>fmServerConnect</Form>
+    </DCCReference>
+    <DCCReference Include="USplash.pas">
+      <Form>fmSplash</Form>
+    </DCCReference>
+    <DCCReference Include="UStatisticReport.pas">
+      <Form>fmStatisticReport</Form>
+    </DCCReference>
+    <DCCReference Include="USuperReport.pas">
+      <Form>fmSuperReport</Form>
+    </DCCReference>
+    <DCCReference Include="UTabOrder.pas">
+      <Form>fmTabOrder</Form>
+    </DCCReference>
+    <DCCReference Include="Utsvlib.pas" />
+    <DCCReference Include="UUnited.pas" />
+    <DCCReference Include="UUpdateInfo.pas">
+      <Form>fmUpdateInfo</Form>
+    </DCCReference>
+    <DCCReference Include="UUtils.pas" />
+    <DCCReference Include="UViewRunService.pas">
+      <Form>fmViewRunService</Form>
+    </DCCReference>
+    <DCCReference Include="UWorkDate.pas">
+      <Form>fmWorkDate</Form>
+    </DCCReference>
+    <DCCReference Include="UWorkYear.pas">
+      <Form>fmWorkYear</Form>
+    </DCCReference>
+    <DCCReference Include="Wordconst.pas" />
+    <None Include="def.inc" />
+  </ItemGroup>
+</Project>

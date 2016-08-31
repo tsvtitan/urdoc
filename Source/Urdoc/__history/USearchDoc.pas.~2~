@@ -1,0 +1,617 @@
+unit USearchDoc;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls, ComCtrls, ImgList, Menus, dbtables,db, StdCtrls, Buttons,
+  inifiles, DBCtrls, IBCustomDataSet, IBQuery, UNewDbGrids, DBGrids,
+  IBTable, commctrl,IBDatabase;
+
+type
+
+  TfmSearchDoc = class(TForm)
+    pnLVBack: TPanel;
+    pnLv: TPanel;
+    pnFind: TPanel;
+    pnBottom: TPanel;
+    lbCount: TLabel;
+    pnCondition: TPanel;
+    pnFindNew: TPanel;
+    Label1: TLabel;
+    edHint: TEdit;
+    bibSCondit: TBitBtn;
+    bibClose: TBitBtn;
+    bibView: TBitBtn;
+    LV: TListView;
+    ilLvSmall: TImageList;
+    BitBtn1: TBitBtn;
+    bibGotoDoc: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure MainqrAfterScroll(DataSet: TDataSet);
+    procedure bibRefreshClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure bibCloseClick(Sender: TObject);
+    procedure bibSConditClick(Sender: TObject);
+    procedure bibViewClick(Sender: TObject);
+    procedure LVCustomDrawItem(Sender: TCustomListView; Item: TListItem;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure LVChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
+    procedure FormResize(Sender: TObject);
+    procedure LVColumnClick(Sender: TObject; Column: TListColumn);
+    procedure LVKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure bibGotoDocClick(Sender: TObject);
+  private
+    glSortSubItem:integer;
+    glSortForward:boolean;
+    
+    isFindName,isFindTypeDoc,isFindHint: Boolean;
+
+
+
+
+    FilterInside: Boolean;
+
+    CountSearch: Integer;
+
+    function GetFilterString: string;
+    procedure SaveFilter;
+
+    procedure SearchInDocs;
+    procedure DeleteAllSearch;
+    procedure ClearListView;
+    procedure lvCompareStr(Sender: TObject; Item1, Item2: TListItem;
+                             Data: Integer; var Compare: Integer);
+
+    procedure DeleteSelected;                              
+  public
+    FindName,FindTypeDoc,FindHint: String;
+    FlagActive: Boolean;
+    LastIndex: Integer;
+    procedure LoadFilter;
+    function ActiveQuery: Boolean;
+    procedure ViewCount;
+    procedure ColumnCountChanged;
+  end;
+
+var
+  fmSearchDoc: TfmSearchDoc;
+
+implementation
+
+uses UMain, UDM, UHint, UDocTree, UNewForm, USearchDocEdit, UCaseReestr,
+     UProgress, UNewOperation, UEditOperation, UEditSumm, UDocReestr,
+     UCheckSum;
+
+{$R *.DFM}
+
+procedure TfmSearchDoc.FormCreate(Sender: TObject);
+begin
+  LastIndex:=0;
+  OnKeyDown:=fmMain.OnKeyDown;
+  OnKeyPress:=fmMain.OnKeyPress;
+  OnKeyUp:=fmMain.OnKeyUp;
+  LoadFromIniReestrParams;
+  ColumnCountChanged;
+end;
+
+procedure TfmSearchDoc.FormDestroy(Sender: TObject);
+begin
+  fmSearchDoc:=nil;
+end;
+
+procedure TfmSearchDoc.SaveFilter;
+var
+  fi: TIniFile;
+begin
+ try
+  fi:=nil;
+  try
+    fi:=TIniFile.Create(GetIniFileName);
+    fi.WriteString(ClassName,'Name',FindName);
+    fi.WriteString(ClassName,'TypeDoc',FindTypeDoc);
+    fi.WriteString(ClassName,'Hint',FindHint);
+    fi.WriteBool(ClassName,'Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+ except
+ end; 
+end;
+
+procedure TfmSearchDoc.LoadFilter;
+var
+  fi: TIniFile;
+
+begin
+ try
+  fi:=nil;
+  try
+   fi:=TIniFile.Create(GetIniFileName);
+
+    FindName:=fi.ReadString(ClassName,'Name',FindName);
+    FindTypeDoc:=fi.ReadString(ClassName,'TypeDoc',FindTypeDoc);
+    FindHint:=fi.ReadString(ClassName,'Hint',FindHint);
+    FilterInside:=fi.ReadBool(ClassName,'Inside',FilterInside);
+
+  finally
+   fi.Free;
+  end;
+ except
+ end; 
+end;
+
+procedure TfmSearchDoc.ViewCount;
+begin
+ lbCount.Caption:=ViewCountTextSearch+inttostr(CountSearch);
+end;
+
+
+procedure TfmSearchDoc.MainqrAfterScroll(DataSet: TDataSet);
+begin
+ // ViewCount;
+end;
+
+procedure TfmSearchDoc.bibRefreshClick(Sender: TObject);
+begin
+  ActiveQuery;
+end;
+
+procedure TfmSearchDoc.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ if (not (ssAlt in Shift))and(not(ssCtrl in Shift)) then begin
+  case Key of
+//    VK_F2: bibAdd.Click;
+    VK_F3: bibView.Click;
+    VK_F4: bibGotoDoc.Click;
+{    VK_F4: bibDel.Click;
+    VK_F5: bibRefresh.Click;
+    VK_F6: bibFilter.Click;}
+  end;
+ end;
+ fmMain.FormKeyDown(Sender,Key,Shift);
+end;
+
+function TfmSearchDoc.GetFilterString: string;
+var
+  FilInSide: string;
+  wherestr: string;
+  addstr1,addstr2,addstr3: string;
+  and1,and2: string;
+begin
+    Result:='';
+
+    isFindName:=trim(FindName)<>'';
+    isFindTypeDoc:=trim(FindTypeDoc)<>'';
+    isFindHint:=Trim(FindHint)<>'';
+
+    if isFindName or isFindTypeDoc or isFindHint then begin
+       wherestr:=' where ';
+    end;
+
+    if FilterInside then FilInSide:='%';
+
+      if isFindName then begin
+        addstr1:=' Upper(td.name) like '+AnsiUpperCase(QuotedStr(FilInSide+FindName+'%'))+' ';
+      end;
+      if isFindTypeDoc then begin
+        addstr2:=' Upper(ttd.name) like '+AnsiUpperCase(QuotedStr(FilInSide+FindTypeDoc+'%'))+' ';
+      end;
+      if isFindHint then begin
+        addstr3:=' Upper(td.hint) like '+AnsiUpperCase(QuotedStr(FilInSide+FindHint+'%'))+' ';
+      end;
+
+      if (isFindName and isFindTypeDoc)or
+         (isFindName and isFindHint)then
+      and1:=' and ';
+
+      if (isFindTypeDoc and isFindHint)then
+      and2:=' and ';
+
+      Result:=wherestr+addstr1+and1+
+                       addstr2+and2+
+                       addstr3;
+end;
+
+procedure TfmSearchDoc.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  DeleteAllSearch;
+  Action:=caFree;
+end;
+
+procedure TfmSearchDoc.bibCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+function TfmSearchDoc.ActiveQuery: Boolean;
+var
+ fm: TfmSearchDocEdit;
+begin
+ Result:=false;
+ FlagActive:=false;
+ fmDocReestr.bibrefresh.Click;
+ fm:=TfmSearchDocEdit.Create(nil);
+ try
+  fm.Caption:='Условия поиска шаблонов документов';
+  if Trim(FindName)<>'' then fm.edString.Text:=FindName;
+  if Trim(FindTypeDoc)<>'' then fm.edPathName.Text:=FindTypeDoc;
+  if Trim(FindHint)<>'' then fm.edHint.Text:=FindHint;
+  fm.cbInString.Checked:=FilterInside;
+
+  if fm.ShowModal=mrOk then begin
+    Result:=true;
+    FlagActive:=true;
+
+    FindName:=Trim(fm.edString.Text);
+    FindTypeDoc:=Trim(fm.edPathName.Text);
+    FindHint:=Trim(fm.edHint.Text);
+    FilterInside:=fm.cbInString.Checked;
+
+    SaveFilter;
+    DeleteAllSearch;
+    SearchInDocs;
+  end;
+
+ finally
+  fm.Free;
+ end;
+
+end;
+
+procedure TfmSearchDoc.SearchInDocs;
+var
+  qr: TIBQuery;
+  sqls: String;
+  i: Integer;
+  li: TListItem;
+  PList: PInfoDoc;
+  tr: TIBTransaction;
+  Root: string;
+  ms: TMemoryStream;
+begin
+  Screen.Cursor:=crHourGlass;
+  BreakAnyProgress:=false;
+  fmProgress.Caption:='Найдено: 0';
+  fmProgress.lbProgress.Caption:='Подготовка:';
+  fmProgress.gag.Progress:=0;
+  fmProgress.Visible:=true;
+  fmProgress.Update;
+  tr:=TIBTransaction.Create(nil);
+  qr:=TIBQuery.Create(nil);
+  ms:=TMemoryStream.Create;
+  try
+   tr.AddDatabase(dm.IBDbase);
+   dm.IBDbase.AddTransaction(tr);
+   tr.Params.Text:=DefaultTransactionParamsTwo;
+   qr.Database:=dm.IBDbase;
+   qr.Transaction:=tr;
+   qr.Transaction.Active:=true;
+   sqls:='Select td.doc_id,td.typedoc_id,td.name as tdname,td.hint,'+
+         'ttd.name as ttdname, td.datadoc, td.lastdate from '+
+         TableDoc+' td join '+
+         TableTypeDoc+' ttd on td.typedoc_id=ttd.typedoc_id '+
+         GetFilterString;
+   qr.SQL.Add(sqls);
+   qr.Active:=true;
+
+   fmProgress.gag.MaxValue:=GetRecordCount(qr);
+   fmProgress.gag.Progress:=0;
+
+   i:=0;
+   CountSearch:=0;
+   qr.First;
+   while not qr.Eof do begin
+     application.ProcessMessages;
+     if BreakAnyProgress then exit;
+     inc(CountSearch);
+     fmProgress.Caption:='Найдено: '+inttostr(CountSearch);
+
+     Root:=GetTreeRootFromTypeDoc(qr.FieldByName('typedoc_id').AsInteger);
+     if Trim(Root)='' then Root:='Удаленные администратором';
+
+     new(PList);
+     PList.Name:=Trim(qr.FieldByName('tdname').AsString);
+     PList.Hint:=Trim(qr.FieldByName('hint').AsString);
+     PList.ID:=qr.FieldByName('doc_id').AsInteger;
+     PList.NodeID:=qr.FieldByName('typedoc_id').AsInteger;
+     li:=LV.Items.Add;
+     li.Caption:=PList.Name;
+     li.SubItems.Add(Root);
+     li.SubItems.Add(qr.FieldByName('lastdate').AsString);
+     ms.Clear;
+     TBlobField(qr.fieldByName('DataDoc')).SaveToStream(ms);
+     li.SubItems.Add(Format('%p',[Pointer(CalculateCheckSum(ms.Memory,ms.Size))]));
+     li.data:=PList;
+      
+     SetPositonAndText(i+1,qr.FieldByname('tdname').AsString,'Документ: ',nil,fmProgress.gag.MaxValue);
+     inc(i);
+     qr.Next;
+   end;
+  finally
+   if LV.Items.Count<>0 then begin
+    ListView_SetColumnWidth(LV.Handle,0,LVSCW_AUTOSIZE);
+    ListView_SetColumnWidth(LV.Handle,1,LVSCW_AUTOSIZE);
+    LV.Items[0].Selected:=true;
+    LV.Items[0].MakeVisible(true);
+   end;
+   ViewCount;
+   ms.Free;
+   qr.Free;
+   tr.Free;
+   fmProgress.Visible:=false;
+   Screen.Cursor:=crDefault;
+  end;
+end;
+
+procedure TfmSearchDoc.bibSConditClick(Sender: TObject);
+begin
+  fmSearchDoc.LoadFilter;
+  fmSearchDoc.ActiveQuery;
+end;
+
+
+procedure TfmSearchDoc.DeleteAllSearch;
+begin
+  Screen.Cursor:=crHourGlass;
+  try
+    ClearListView;
+  finally
+    Screen.Cursor:=crDefault;
+  end;
+end;
+
+
+procedure TfmSearchDoc.bibViewClick(Sender: TObject);
+var
+  li: TListITem;
+  PList: PInfoDoc;
+begin
+  li:=lv.Selected;
+  if li=nil then begin
+    ShowError(Handle,DefSelectDocument);
+    exit;
+  end;  
+  PList:=li.Data;
+  if not ExtractDocFile(PList.ID,CaptionView) then exit;
+  if SetFieldsToWord(nil,true,true) then begin
+  end;
+end;
+
+procedure TfmSearchDoc.LVCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+
+  procedure DrawItem;
+  var
+    rt: Trect;
+    wd: Integer;
+    OldBrush: TBrush;
+    OldFont: TFont;
+    OldPen: Tpen;
+  begin
+  //drBounds, drIcon, drLabel, drSelectBounds
+   OldBrush:=TBrush.Create;
+   OldFont:=TFont.Create;
+   OldPen:=Tpen.Create;
+   try
+    OldBrush.Assign(Canvas.Brush);
+    OldFont.Assign(Canvas.Font);
+    OldPen.Assign(Canvas.Pen);
+    rt:=Item.DisplayRect(drLabel);
+    with Sender.Canvas do begin
+     brush.Style:=bsSolid;
+     brush.Color:=clBtnFace;
+     wd:=TextWidth(Item.Caption);
+     InflateRect(rt,0,-1);
+     rt.Right:=rt.Left+wd;
+     FillRect(rt);
+    end;
+   finally
+     Canvas.Brush.Assign(OldBrush);
+     OldBrush.Free;
+     Canvas.Font.Assign(OldFont);
+     OldFont.Free;
+     Canvas.Pen.Assign(OldPen);
+     OldPen.Free;
+   end;
+  end;
+
+begin
+// exit;
+{  DefaultDraw:=true;
+  if (Item.Selected)and(not(cdsHot in State)) then
+      DrawItem
+  else DefaultDraw:=true;
+  inherited;  }
+end;
+
+procedure TfmSearchDoc.ClearListView;
+var
+  P: PInfoDoc;
+  i: Integer;
+  li: TListItem;
+begin
+  for i:=0 to LV.Items.Count-1 do begin
+    li:=LV.Items.Item[i];
+    P:=li.Data;
+    Dispose(P);
+  end;
+  try
+   lv.Items.BeginUpdate;
+   lv.Items.Clear;
+  finally
+   lv.Items.EndUpdate;
+  end;
+end;
+
+procedure TfmSearchDoc.LVChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+begin
+ if Change=ctState then
+  if LV.Selected<>nil then
+   edHint.Text:=PInfoDoc(LV.Selected.Data).Hint;
+end;
+
+procedure TfmSearchDoc.FormResize(Sender: TObject);
+begin
+  edHint.Width:=Self.Width-edHint.Left-pnCondition.Width-10;
+end;
+
+procedure TfmSearchDoc.LVColumnClick(Sender: TObject; Column: TListColumn);
+var
+ newSortItem:integer;
+begin
+ newSortItem:=Column.Index-1;
+ if glSortSubItem=newSortItem then glSortForward:=not glSortForward
+ else glSortForward:=true;
+ glSortSubItem:=newSortItem;
+ lv.OnCompare:=lvCompareStr;
+ lv.AlphaSort;
+end;
+
+procedure TfmSearchDoc.lvCompareStr(Sender: TObject; Item1, Item2: TListItem;
+  Data: Integer; var Compare: Integer);
+begin
+ if glSortSubItem>=0 then Compare:=CompareText(Item1.SubItems[glSortSubItem],Item2.SubItems[glSortSubItem])
+ else Compare:=CompareText(Item1.Caption,Item2.Caption);
+ if glSortForward=false then Compare:=-Compare;
+end;
+
+procedure TfmSearchDoc.LVKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) then begin
+    if Key=VK_DELETE then begin
+      DeleteSelected;
+    end;
+    if (Key=Word('A')) or (Key=Word('a')) then begin
+     SelectAllInListView(LV);
+    end;
+  end;
+  FormKeyDown(Sender,Key,Shift);
+end;
+
+procedure TfmSearchDoc.DeleteSelected;
+
+  function DeleteByItem(li: TListItem): Boolean;
+  var
+    qr: TIBQuery;
+    sqls: string;
+    tr: TIBTransaction;
+    PlIst: PInfoDoc;
+  begin
+   Plist:=li.data;
+   Screen.Cursor:=crHourGlass;
+   tr:=TIBTransaction.Create(nil);
+   qr:=TIBQuery.Create(nil);
+   try
+    result:=false;
+    try
+
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Delete from '+TableDoc+' where doc_id='+inttostr(PList.ID);
+     qr.sql.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+     Result:=true;
+    except
+    end;
+   finally
+    qr.Free;
+    tr.Free;
+    Screen.Cursor:=crDefault;
+   end;
+  end; 
+
+var
+  i: Integer;
+  li: TListItem;
+  PList: PInfoDoc;
+  isRef: Boolean;
+  mr: TModalResult;
+begin
+  mr:=MessageDlg('Удалить выделенные документы ?',mtConfirmation,[mbYes,mbNo],-1);
+
+//  but:=MessageBox(Handle,Pchar('Удалить выделенные документы ?'),'Предупреждение',MB_YESNO+MB_ICONWARNING+MB_DEFBUTTON2);
+  if mr=mrNo then exit;
+  isRef:=false;
+  Lv.Items.BeginUpdate;
+  try
+   for i:=Lv.Items.Count-1 downto 0 do begin
+     li:=Lv.Items[i];
+     if li.Selected then begin
+       if DeleteByItem(li) then begin
+         isRef:=true;
+         PList:=li.Data;
+         Dispose(PList);
+         li.Delete;
+       end;
+     end;
+   end;
+  finally
+   Lv.Items.EndUpdate;
+   ViewCount;
+  end;
+  if isRef then begin
+   mr:=MessageDlg('Обновить данные ?',mtConfirmation,[mbYes,mbNo],-1);
+//   but:=MessageBox(Handle,Pchar('Обновить данные ?'),'Информация',MB_YESNO+MB_ICONINFORMATION+MB_DEFBUTTON1);
+   if mr=mrNo then exit;
+   RefreshAll;
+  end;  
+end;
+
+procedure TfmSearchDoc.ColumnCountChanged;
+var
+  lc: TListColumn;
+begin
+  if isViewDateInListView then begin
+   if LV.Columns.Count<3 then begin
+    lc:=LV.Columns.Add;
+    lc.Caption:='Дата и время изменения';
+    lc.AutoSize:=true;
+    lc.Width:=100;
+
+    lc:=LV.Columns.Add;
+    lc.Caption:='Контрольная сумма';
+    lc.AutoSize:=true;
+    lc.Width:=60;
+   end;
+  end else begin
+    if LV.Columns.Count>3 then begin
+     LV.Columns.Delete(3);
+     LV.Columns.Delete(2);
+    end; 
+  end;
+end;
+
+procedure TfmSearchDoc.bibGotoDocClick(Sender: TObject);
+var
+  li: TListITem;
+  PList: PInfoDoc;
+begin
+  li:=lv.Selected;
+  if li=nil then begin
+    ShowError(Handle,DefSelectDocument);
+    exit;
+  end;  
+  PList:=li.Data;
+  if fmDocReestr<>nil then begin
+    if not fmDocTree.ViewDoc(PList.NodeID,PList.ID) then
+      MessageDlg('Шаблон не найден. Возможно он скрыт.',mtInformation	,[mbOk],-1);
+  end;
+end;
+
+end.
+

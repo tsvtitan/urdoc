@@ -1,0 +1,583 @@
+unit URBReminder;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls, StdCtrls, DBCtrls, Grids, DBGrids, Buttons,
+  UEditReminder, UNewDbGrids, inifiles, IBCustomDataSet, IBQuery, IBTable,
+  ImgList, Db,IBDatabase, Variants;
+
+type
+  TfmRBReminder = class(TForm)
+    pnBut: TPanel;
+    pnGrid: TPanel;
+    ds: TDataSource;
+    pnFind: TPanel;
+    Label1: TLabel;
+    edSearch: TEdit;
+    pnBottom: TPanel;
+    DBNav: TDBNavigator;
+    lbCount: TLabel;
+    Mainqr: TIBQuery;
+    pnModal: TPanel;
+    bibOk: TBitBtn;
+    bibClose: TBitBtn;
+    bibFilter: TBitBtn;
+    pnSQL: TPanel;
+    bibAdd: TBitBtn;
+    bibChange: TBitBtn;
+    bibDel: TBitBtn;
+    tran: TIBTransaction;
+    bibPrint: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure bibAddClick(Sender: TObject);
+    procedure bibChangeClick(Sender: TObject);
+    procedure bibDelClick(Sender: TObject);
+    procedure bibFilterClick(Sender: TObject);
+    procedure edSearchKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure bibCloseClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure MainqrAfterOpen(DataSet: TDataSet);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
+    procedure edSearchKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure bibPrintClick(Sender: TObject);
+  private
+//    EditValueSubsName: string;
+//    EditValueSubsId: integer;
+    isFindText: Boolean;
+    FindText: String;
+    FilterInSide: Boolean;
+{    procedure GridDrawColumnCell(Sender: TObject; const Rect: TRect;
+                                 DataCol: Integer; Column: TColumn;
+                                 State: TGridDrawState);}
+    procedure GridTitleClick(Column: TColumn);
+    procedure GridDblClick(Sender: TObject);
+    procedure SetImageFilter;
+    procedure SaveFilter;
+    procedure ViewCount;
+    function GetFilterString: string;
+    function TextExists(strText: String; var ID: Integer): Boolean;
+    procedure GridKeyPress(Sender: TObject; var Key: Char);
+  public
+    Grid: TNewdbGrid;
+    procedure MR(Sender: TObject);
+    procedure ActiveQuery;
+    procedure LoadFilter;
+  end;
+
+var
+  fmRBReminder: TfmRBReminder;
+   
+implementation
+
+uses Udm, UMain;
+
+{$R *.DFM}
+
+procedure TfmRBReminder.FormCreate(Sender: TObject);
+begin
+  
+  tran.AddDatabase(dm.IBDbase);
+  dm.IBDbase.AddTransaction(tran);
+  tran.Params.Text:=DefaultTransactionParamsTwo;
+  Mainqr.Transaction:=tran;
+
+  Grid:=TNewdbGrid.Create(self);
+  Grid.Parent:=pnGrid;
+  Grid.Align:=alClient;
+  Grid.DataSource:=ds;
+   Grid.RowSelected.Visible:=true;
+   Grid.RowSelected.Brush.Style:=bsSolid;
+   Grid.RowSelected.Brush.Color:=GridRowColor;
+   Grid.RowSelected.Font.Color:=clWhite;
+   Grid.RowSelected.Pen.Style:=psClear;
+   Grid.CellSelected.Visible:=true;
+   Grid.CellSelected.Brush.Color:=clHighlight;
+   Grid.CellSelected.Font.Color:=clHighlightText;
+  Grid.Options:=Grid.Options-[dgEditing]-[dgTabs];
+  Grid.ReadOnly:=true;
+  Grid.OnTitleClick:=GridTitleClick;
+  Grid.OnDblClick:=GridDblClick;
+  Grid.OnKeyDown:=FormKeyDown;
+  Grid.OnKeyPress:=GridKeyPress;
+
+  OnKeyDown:=fmMain.OnKeyDown;
+  OnKeyPress:=fmMain.OnKeyPress;
+  OnKeyUp:=fmMain.OnKeyUp;
+  Mainqr.Database:=dm.IBDbase;
+end;
+
+procedure TfmRBReminder.ActiveQuery;
+var
+ sqls: String;
+ cl: TColumn;
+begin
+  ds.DataSet:=nil;
+  Mainqr.Active:=false;
+  Mainqr.sql.Clear;
+  sqls:='Select * from '+TableReminder+' '+GetFilterString+' order by priority';
+  Mainqr.sql.Add(sqls);
+  Mainqr.Active:=true;
+  ds.DataSet:=Mainqr;
+  SetImageFilter;
+  ViewCount;
+   if Grid.Columns.Count<>2 then begin
+
+    cl:=Grid.Columns.Add;
+    cl.FieldName:='text';
+    cl.Title.Caption:='Текст';
+    cl.Width:=300;
+
+    cl:=Grid.Columns.Add;
+    cl.FieldName:='priority';
+    cl.Title.Caption:='Порядок';
+    cl.Width:=50;
+    
+  end;
+end;
+
+procedure TfmRBReminder.bibAddClick(Sender: TObject);
+var
+  fm: TfmEditReminder;
+  RetVal: Boolean;
+  valname: string;
+  ID: Integer;
+  qr: TIbQuery;
+  sqls: string;
+  tr: TIBTransaction;
+begin
+ fm:=TfmEditReminder.Create(nil);
+ try
+  fm.Caption:=captionAdd;
+  fm.btOk.OnClick:=fm.OkClick;
+  if fm.ShowModal=mrOk then begin
+
+    valname:=Trim(fm.meText.LInes.Text);
+    retval:=TextExists(valname,ID);
+    if retVal then begin
+      ShowError(Application.handle,'Значение <'+valname+'> '+#13+
+               'в поле <'+fm.lbText.Caption+'>'+#13+
+               valuePresent);
+      MainQr.Locate('reminder_id',id,[loCaseInsensitive]);
+      exit;
+    end;
+    Screen.Cursor:=crHourGlass;
+    tr:=TIBTransaction.Create(nil);
+    qr:=TIbQuery.Create(nil);
+    try
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Insert into '+TableReminder+' (text,priority) '+
+           ' values ('+
+           QuotedStr(trim(fm.meText.Lines.Text))+','+
+           inttostr(fm.udPriority.Position)+
+           ')';
+     qr.SQL.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+    finally
+     qr.Free;
+     tr.Free;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     Mainqr.Locate('text;reminder_id',VarArrayOf([valname,fm.ReminderID]),[loCaseInsensitive]);
+     ViewCount;
+     Screen.Cursor:=crDefault;
+    end;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmRBReminder.bibChangeClick(Sender: TObject);
+var
+  fm: TfmEditReminder;
+  RetVal: Boolean;
+  valname: string;
+  Id: Integer;
+  qr: TIbQuery;
+  sqls: string;
+  tr: TIBTransaction;
+  oldid: string;
+begin
+ if MainQr.RecordCount=0 then exit;
+ fm:=TfmEditReminder.Create(nil);
+ try
+  fm.Caption:=captionChange;
+  fm.ReminderID:=MainQr.FieldByName('reminder_id').AsInteger;
+  fm.meText.Lines.Text:=trim(MainQr.FieldByName('text').AsString);
+  fm.udPriority.Position:=MainQr.FieldByName('priority').AsInteger;
+
+  fm.btOk.OnClick:=fm.OkClick;
+  fm.ChangeFlag:=false;
+
+  if fm.ShowModal=mrOk then begin
+
+    if not fm.ChangeFlag then exit;
+    valname:=Trim(fm.meText.Lines.Text);
+    retval:=TextExists(valname,Id);
+    oldid:=MainQr.FieldByName('reminder_id').AsString;
+    if (retVal)and(MainQr.FieldByName('reminder_id').AsInteger<>id) then begin
+      ShowError(Application.handle,'Значение <'+valname+'> '+#13+
+               'в поле <'+fm.lbtext.Caption+'>'+#13+
+               valuePresent);
+      MainQr.Locate('reminder_id',id,[loCaseInsensitive]);
+      exit;
+    end;
+    Screen.Cursor:=crHourGlass;
+    tr:=TIBTransaction.Create(nil);
+    qr:=TIbQuery.Create(nil);
+    try
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Update '+TableReminder+' set '+
+           'text='+QuotedStr(trim(fm.meText.Lines.Text))+
+           ',priority='+inttostr(fm.udPriority.Position)+
+           ' where reminder_id='+oldid;
+     qr.SQL.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+    finally
+     qr.Free;
+     tr.Free;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     Mainqr.Locate('reminder_id',oldid,[loCaseInsensitive]);
+     ViewCount;
+     Screen.Cursor:=crDefault;
+    end;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmRBReminder.bibDelClick(Sender: TObject);
+
+  function DeleteRecord: Boolean;
+  var
+    qr: TIBQuery;
+    sqls: string;
+    tr: TIBTransaction;
+  begin
+   Screen.Cursor:=crHourGlass;
+   tr:=TIBTransaction.Create(nil);
+   qr:=TIBQuery.Create(nil);
+   try
+    result:=false;
+    try
+
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Delete from '+TableReminder+' where reminder_id='+
+          Mainqr.FieldByName('reminder_id').asString;
+     qr.sql.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+     Result:=true;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     Mainqr.Last;
+     ViewCount;
+    except
+    end;
+   finally
+    qr.Free;
+    tr.Free;
+    Screen.Cursor:=crDefault;
+   end;
+
+  end;
+
+var
+  mr: TModalResult;  
+begin
+  if Mainqr.RecordCount=0 then exit;
+  mr:=MessageDlg('Удалить ?',mtConfirmation,[mbYes,mbNo],-1);
+
+  if mr=mrYes then begin
+    if not deleteRecord then begin
+      ShowError(Application.Handle,'Напоминание <'+Mainqr.FieldByName('text').AsString+'> используется.');
+    end;
+  end;
+end;
+
+procedure TfmRBReminder.bibFilterClick(Sender: TObject);
+var
+  fm: TfmEditReminder;
+  filstr: string;
+begin
+ fm:=TfmEditReminder.Create(nil);
+ try
+  fm.Caption:=CaptionFilter;
+  fm.lbPriority.Enabled:=false;
+  fm.edPriority.Enabled:=false;
+  fm.edPriority.Color:=clBtnFace;
+  fm.udPriority.Enabled:=false;
+  fm.btOk.OnClick:=fm.filterClick;
+
+  if Trim(FindText)<>'' then fm.meText.Lines.Text:=FindText;
+
+  fm.cbInString.Visible:=true;
+  fm.cbInString.Checked:=FilterInSide;
+  fm.ChangeFlag:=false;
+
+  if fm.ShowModal=mrOk then begin
+
+    FindText:=Trim(fm.meText.Lines.Text);
+    isFindText:=Trim(FindText)<>'';
+
+    FilterInSide:=fm.cbInString.Checked;
+    if FilterInSide then filstr:='%';
+
+    SaveFilter;
+    ActiveQuery;
+    ViewCount;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmRBReminder.bibPrintClick(Sender: TObject);
+begin
+  CreateWordTableByGrid(Grid,Caption);
+end;
+
+procedure TfmRBReminder.MR(Sender: TObject);
+begin
+  ModalResult:=mrOk;
+end;
+
+procedure TfmRBReminder.edSearchKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if not isValidKey(Char(Key)) then exit;
+  if MainQr.IsEmpty then exit;
+  if grid.SelectedField=nil then exit;
+  MainQr.Locate(grid.SelectedField.FullName,Trim(edSearch.Text),
+                [loPartialKey,loCaseInsensitive]);
+end;
+
+procedure TfmRBReminder.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action:=caFree;
+end;
+
+procedure TfmRBReminder.bibCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfmRBReminder.GridTitleClick(Column: TColumn);
+var
+  fn: string;
+  id: integer;
+  sqls: string;
+begin
+  if not MainQr.Active then exit;
+  if MainQr.RecordCount=0 then exit;
+  Screen.Cursor:=crHourGlass;
+  try
+   fn:=Column.FieldName;
+   id:=MainQr.fieldByName('reminder_id').asInteger;
+   MainQr.Active:=false;
+   MainQr.SQL.Clear;
+   sqls:='Select * from '+TableReminder+
+         GetFilterString+' order by '+fn;
+   MainQr.SQL.Add(sqls);
+   MainQr.Active:=true;
+   MainQr.First;
+   MainQr.Locate('reminder_id',id,[loCaseInsensitive]);
+  finally
+    Screen.Cursor:=crDefault;
+  end;
+end;
+
+procedure TfmRBReminder.FormDestroy(Sender: TObject);
+begin
+  Grid.Free;
+  if fsCreatedMDIChild in FormState then
+   fmRbReminder:=nil;
+end;
+
+procedure TfmRBReminder.SetImageFilter;
+begin
+  bibFilter.Glyph.Assign(nil);
+  bibFilter.Glyph.Width:=dm.IlMain.Width;
+  bibFilter.Glyph.Height:=dm.IlMain.Height;
+  if isFindText then begin
+    dm.IlMain.draw(bibFilter.Glyph.Canvas,0,0,0,true);
+  end else begin
+    dm.IlMain.draw(bibFilter.Glyph.Canvas,0,0,1,true);
+  end;
+end;
+
+procedure TfmRBReminder.LoadFilter;
+var
+  fi: TIniFile;
+begin
+  fi:=TIniFile.Create(GetIniFileName);
+  try
+    FindText:=fi.ReadString(ClassName,'Text',FindText);
+    FilterInside:=fi.ReadBool(ClassName,'Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+end;
+
+procedure TfmRBReminder.SaveFilter;
+var
+  fi: TIniFile;
+begin
+  fi:=TIniFile.Create(GetIniFileName);
+  try
+    fi.WriteString(ClassName,'Text',FindText);
+    fi.WriteBool(ClassName,'Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+end;
+
+procedure TfmRBReminder.ViewCount;
+begin
+ if MainQr.Active then
+  lbCount.Caption:=ViewCountText+inttostr(GetRecordCount(Mainqr));
+end;
+
+procedure TfmRBReminder.MainqrAfterOpen(DataSet: TDataSet);
+begin
+  ViewCount;
+end;
+
+{procedure TfmRBReminder.GridDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+
+begin
+
+end;}
+
+procedure TfmRBReminder.GridDblClick(Sender: TObject);
+begin
+  if not Mainqr.Active then exit;
+  if Mainqr.RecordCount=0 then exit;
+  bibChangeClick(nil);
+end;
+
+function TfmRBReminder.TextExists(strText: String; var ID: Integer): Boolean;
+var
+  qr: TIBQuery;
+  sqls: string;
+  tr: TIBTransaction;
+begin
+  Result:=false;
+  Screen.Cursor:=CrHourGlass;
+  tr:=TIBTransaction.Create(nil);
+  qr:=TIBQuery.Create(nil);
+  try
+   tr.AddDatabase(dm.IBDbase);
+   dm.IBDbase.AddTransaction(tr);
+   tr.Params.Text:=DefaultTransactionParamsTwo;
+   qr.Database:=dm.IBDbase;
+   qr.Transaction:=tr;
+   qr.Transaction.Active:=true;
+   sqls:='Select * from '+TableReminder+' where text='+QuotedStr(Trim(strText));
+   qr.SQL.Add(sqls);
+   qr.Active:=true;
+   if qr.recordCount=1 then begin
+     ID:=qr.FieldByName('reminder_id').ASInteger;
+     Result:=true;
+   end;
+  finally
+   qr.Free;
+   tr.Free;
+   Screen.Cursor:=CrDefault;
+  end;
+end;
+
+procedure TfmRBReminder.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case Key of
+    VK_F2: if pnSQL.Visible then bibAdd.Click;
+    VK_F3: if pnSQL.Visible then bibChange.Click;
+    VK_F4: if pnSQL.Visible then bibDel.Click;
+//    VK_F5: bibRefresh.Click;
+    VK_F6: bibFilter.Click;
+  end;
+  fmMain.FormKeyDown(Sender,Key,Shift);
+end;
+
+function TfmRBReminder.GetFilterString: string;
+var
+  FilInSide: string;
+  wherestr: string;
+  addstr2: string;
+begin
+    Result:='';
+
+    isFindText:=Trim(FindText)<>'';
+
+
+    if isFindText then begin
+     wherestr:=' where ';
+    end else begin
+    end;
+
+    if FilterInside then FilInSide:='%';
+
+     if isFindText then begin
+        addstr2:=' Upper(text) like '+AnsiUpperCase(QuotedStr(FilInSide+FindText+'%'))+' ';
+     end;
+
+      Result:=wherestr+addstr2;
+
+end;
+
+procedure TfmRBReminder.FormResize(Sender: TObject);
+begin
+  edSearch.Width:=Self.Width-edSearch.Left-pnBut.Width-8;
+end;
+
+procedure TfmRBReminder.edSearchKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case key of
+    VK_UP,VK_DOWN: Grid.SetFocus;
+  end;
+  FormKeyDown(Sender,Key,Shift);
+end;
+
+procedure TfmRBReminder.GridKeyPress(Sender: TObject; var Key: Char);
+begin
+  if isValidKey(Key) then begin
+   edSearch.SetFocus;
+   edSearch.Text:=Key;
+   edSearch.SelStart:=Length(edSearch.Text);
+   if Assigned(edSearch.OnKeyPress) then
+    edSearch.OnKeyPress(Sender,Key);
+  end;
+end;
+
+
+end.

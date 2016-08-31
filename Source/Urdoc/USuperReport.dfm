@@ -1,0 +1,329 @@
+object fmSuperReport: TfmSuperReport
+  Left = 284
+  Top = 112
+  BorderStyle = bsDialog
+  Caption = #1059#1085#1080#1074#1077#1088#1089#1072#1083#1100#1085#1099#1081' '#1086#1090#1095#1077#1090
+  ClientHeight = 309
+  ClientWidth = 310
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbSumm: TLabel
+    Left = 51
+    Top = 116
+    Width = 35
+    Height = 13
+    Caption = #1057#1091#1084#1084#1072':'
+    Visible = False
+  end
+  object lbUserName: TLabel
+    Left = 8
+    Top = 298
+    Width = 76
+    Height = 13
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
+    Visible = False
+  end
+  object lbDocName: TLabel
+    Left = 34
+    Top = 38
+    Width = 54
+    Height = 13
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090':'
+  end
+  object lbOperation: TLabel
+    Left = 35
+    Top = 64
+    Width = 54
+    Height = 13
+    Caption = #1054#1087#1077#1088#1072#1094#1080#1103':'
+  end
+  object lbFio: TLabel
+    Left = 11
+    Top = 90
+    Width = 74
+    Height = 13
+    Caption = #1060#1072#1084#1080#1083#1080#1103' '#1048'.'#1054'.:'
+  end
+  object lbTypeReestr: TLabel
+    Left = 49
+    Top = 13
+    Width = 39
+    Height = 13
+    Caption = #1056#1077#1077#1089#1090#1088':'
+  end
+  object edSumm: TEdit
+    Left = 93
+    Top = 113
+    Width = 211
+    Height = 21
+    TabOrder = 7
+    Visible = False
+    OnKeyPress = edSummKeyPress
+  end
+  object bibUsername: TBitBtn
+    Left = 258
+    Top = 294
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 11
+    Visible = False
+    OnClick = bibUsernameClick
+  end
+  object edUserName: TEdit
+    Left = 93
+    Top = 295
+    Width = 165
+    Height = 21
+    TabOrder = 10
+    Visible = False
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object pnBottom: TPanel
+    Left = 0
+    Top = 268
+    Width = 310
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 14
+    object Panel3: TPanel
+      Left = 125
+      Top = 0
+      Width = 185
+      Height = 41
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 1
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 10
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = bibOkClick
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 10
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = #1054#1090#1084#1077#1085#1072
+        ModalResult = 2
+        TabOrder = 1
+        NumGlyphs = 2
+      end
+    end
+    object bibClear: TBitBtn
+      Left = 7
+      Top = 10
+      Width = 75
+      Height = 25
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      TabOrder = 0
+      OnClick = bibClearClick
+      NumGlyphs = 2
+    end
+  end
+  object edDocName: TEdit
+    Left = 93
+    Top = 35
+    Width = 189
+    Height = 21
+    TabOrder = 2
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object bibDocName: TBitBtn
+    Left = 282
+    Top = 35
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 3
+    OnClick = bibDocNameClick
+  end
+  object edOperName: TEdit
+    Left = 93
+    Top = 61
+    Width = 189
+    Height = 21
+    TabOrder = 4
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object bibOperation: TBitBtn
+    Left = 282
+    Top = 61
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 5
+    OnClick = bibOperationClick
+  end
+  object grbDate: TGroupBox
+    Left = 8
+    Top = 110
+    Width = 297
+    Height = 56
+    Caption = ' '#1044#1072#1090#1072' '#1074#1074#1086#1076#1072' '
+    TabOrder = 8
+    object lbDateFrom: TLabel
+      Left = 15
+      Top = 23
+      Width = 9
+      Height = 13
+      Caption = 'c:'
+    end
+    object lbDateTo: TLabel
+      Left = 140
+      Top = 23
+      Width = 16
+      Height = 13
+      Caption = #1087#1086':'
+    end
+    object dtpDateFrom: TDateTimePicker
+      Left = 33
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398100000000
+      Time = 37044.591104398100000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 0
+    end
+    object dtpDateTo: TDateTimePicker
+      Left = 166
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398100000000
+      Time = 37044.591104398100000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 1
+    end
+    object bibDateIn: TBitBtn
+      Left = 261
+      Top = 19
+      Width = 22
+      Height = 22
+      Caption = '...'
+      TabOrder = 2
+      OnClick = bibDateInClick
+    end
+  end
+  object cbInString: TCheckBox
+    Left = 8
+    Top = 254
+    Width = 186
+    Height = 17
+    Caption = #1055#1086' '#1074#1093#1086#1078#1076#1077#1085#1080#1102' '#1089#1090#1088#1086#1082#1080
+    TabOrder = 13
+  end
+  object edFio: TEdit
+    Left = 93
+    Top = 87
+    Width = 211
+    Height = 21
+    TabOrder = 6
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object edTypeReestr: TEdit
+    Left = 93
+    Top = 10
+    Width = 189
+    Height = 21
+    TabOrder = 0
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object bibTypeReestr: TBitBtn
+    Left = 282
+    Top = 10
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 1
+    OnClick = bibTypeReestrClick
+  end
+  object grbDateChange: TGroupBox
+    Left = 8
+    Top = 169
+    Width = 297
+    Height = 56
+    Caption = ' '#1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '
+    TabOrder = 9
+    object Label1: TLabel
+      Left = 15
+      Top = 23
+      Width = 9
+      Height = 13
+      Caption = 'c:'
+    end
+    object Label2: TLabel
+      Left = 140
+      Top = 23
+      Width = 16
+      Height = 13
+      Caption = #1087#1086':'
+    end
+    object dtpDateChangeFrom: TDateTimePicker
+      Left = 33
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398100000000
+      Time = 37044.591104398100000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 0
+    end
+    object dtpDateChangeTo: TDateTimePicker
+      Left = 166
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398100000000
+      Time = 37044.591104398100000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 1
+    end
+    object bibDateChange: TBitBtn
+      Left = 261
+      Top = 19
+      Width = 22
+      Height = 22
+      Caption = '...'
+      TabOrder = 2
+      OnClick = bibDateChangeClick
+    end
+  end
+  object chbOnlyPriv: TCheckBox
+    Left = 8
+    Top = 232
+    Width = 209
+    Height = 17
+    Caption = #1058#1086#1083#1100#1082#1086' '#1083#1100#1075#1086#1090#1085#1099#1077' '#1076#1077#1081#1089#1090#1074#1080#1103
+    TabOrder = 12
+  end
+end

@@ -1,0 +1,530 @@
+unit URBBlanks;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls, StdCtrls, DBCtrls, Grids, DBGrids, Buttons,
+  UEditBlank, UNewDbGrids, inifiles, IBCustomDataSet, IBQuery, IBTable,
+  ImgList, Db,IBDatabase;
+
+type
+  TfmBlanks = class(TForm)
+    pnBut: TPanel;
+    pnGrid: TPanel;
+    ds: TDataSource;
+    pnFind: TPanel;
+    Label1: TLabel;
+    edSearch: TEdit;
+    pnBottom: TPanel;
+    DBNav: TDBNavigator;
+    lbCount: TLabel;
+    Mainqr: TIBQuery;
+    il: TImageList;
+    pnModal: TPanel;
+    bibOk: TBitBtn;
+    bibClose: TBitBtn;
+    bibFilter: TBitBtn;
+    pnSQL: TPanel;
+    bibAdd: TBitBtn;
+    bibChange: TBitBtn;
+    bibDel: TBitBtn;
+    tran: TIBTransaction;
+    bibPrint: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure bibAddClick(Sender: TObject);
+    procedure bibChangeClick(Sender: TObject);
+    procedure bibDelClick(Sender: TObject);
+    procedure bibFilterClick(Sender: TObject);
+    procedure edSearchKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure bibCloseClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure MainqrAfterOpen(DataSet: TDataSet);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
+    procedure bibPrintClick(Sender: TObject);
+  private
+    FindSeries: string;
+    isFindSeries: Boolean;
+    FilterInSide: Boolean;
+    procedure GridTitleClick(Column: TColumn);
+    procedure GridDblClick(Sender: TObject);
+    procedure SetImageFilter;
+    procedure SaveFilter;
+    procedure ViewCount;
+    function GetFilterString: string;
+    procedure SetBlankNumFormat;
+  public
+    Grid: TNewdbGrid;
+    procedure MR(Sender: TObject);
+    procedure ActiveQuery;
+    procedure LoadFilter;
+  end;
+
+var
+  fmBlanks: TfmBlanks;
+   
+implementation
+
+uses StrUtils,
+     Udm, UMain;
+
+{$R *.DFM}
+
+procedure TfmBlanks.FormCreate(Sender: TObject);
+begin
+  tran.AddDatabase(dm.IBDbase);
+  dm.IBDbase.AddTransaction(tran);
+  tran.Params.Text:=DefaultTransactionParamsTwo;
+  Mainqr.Transaction:=tran;
+
+  Grid:=TNewdbGrid.Create(self);
+  Grid.Parent:=pnGrid;
+  Grid.Align:=alClient;
+  Grid.DataSource:=ds;
+   Grid.RowSelected.Visible:=true;
+   Grid.RowSelected.Brush.Style:=bsSolid;
+   Grid.RowSelected.Brush.Color:=clBlack;
+   Grid.RowSelected.Font.Color:=clWhite;
+   Grid.RowSelected.Pen.Style:=psClear;
+   Grid.CellSelected.Visible:=true;
+   Grid.CellSelected.Brush.Color:=clHighlight;
+   Grid.CellSelected.Font.Color:=clHighlightText;
+  Grid.Options:=Grid.Options-[dgEditing]-[dgTabs];
+  Grid.ReadOnly:=true;
+  Grid.OnTitleClick:=GridTitleClick;
+  Grid.OnDblClick:=GridDblClick;
+  Grid.OnKeyDown:=FormKeyDown;
+
+  OnKeyDown:=fmMain.OnKeyDown;
+  OnKeyPress:=fmMain.OnKeyPress;
+  OnKeyUp:=fmMain.OnKeyUp;
+  Mainqr.Database:=dm.IBDbase;
+end;
+
+procedure TfmBlanks.ActiveQuery;
+var
+ sqls: String;
+ cl: TColumn;
+begin
+  ds.DataSet:=nil;
+  Mainqr.Active:=false;
+  Mainqr.sql.Clear;
+  sqls:='Select * from '+TableBlanks+GetFilterString+' order by series';
+  Mainqr.sql.Add(sqls);
+  Mainqr.Active:=true;
+  SetBlankNumFormat;
+  ds.DataSet:=Mainqr;
+  SetImageFilter;
+  ViewCount;
+  if Grid.Columns.Count<>3 then begin
+
+   cl:=Grid.Columns.Add;
+   cl.FieldName:='series';
+   cl.Title.Caption:='Серия';
+   cl.Width:=150;
+
+   cl:=Grid.Columns.Add;
+   cl.FieldName:='num_from';
+   cl.Title.Caption:='Номер от';
+   cl.Width:=100;
+
+   cl:=Grid.Columns.Add;
+   cl.FieldName:='num_to';
+   cl.Title.Caption:='Номер по';
+   cl.Width:=100;
+
+  end;
+end;
+
+procedure TfmBlanks.bibAddClick(Sender: TObject);
+var
+  fm: TfmEditBlank;
+  qr: TIBQuery;
+  valname: string;
+  ID: Integer;
+  sqls: string;
+  tr: TIBTransaction;
+begin
+ fm:=TfmEditBlank.Create(nil);
+ try
+  fm.Caption:=captionAdd;
+  fm.bibOk.OnClick:=fm.OkClick;
+  if fm.ShowModal=mrOk then begin
+
+    valname:=Trim(fm.edSeries.Text);
+    ID:=GetGenId(TableBlanks,1);
+    Screen.Cursor:=crHourGlass;
+    tr:=TIBTransaction.Create(nil);
+    qr:=TIBQuery.Create(nil);
+    try
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Insert into '+TableBlanks+' (blank_id,series,num_from,num_to,visible)'+
+           ' values ('+IntToStr(ID)+
+           ','+QuotedStr(valname)+
+           ','+iff(Trim(fm.edNumFrom.Text)<>'',Trim(fm.edNumFrom.Text),'null')+
+           ','+iff(Trim(fm.edNumTo.Text)<>'',Trim(fm.edNumTo.Text),'null')+
+           ','+IntToStr(Integer(fm.CheckBoxVisible.Checked))+
+           ')';
+     qr.SQL.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+    finally
+     qr.Free;
+     tr.Free;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     SetBlankNumFormat;
+     Mainqr.Locate('blank_id',ID,[loCaseInsensitive]);
+     ViewCount;
+     Screen.Cursor:=crDefault;
+    end;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmBlanks.bibChangeClick(Sender: TObject);
+var
+  fm: TfmEditBlank;
+  valname: string;
+  Id: Integer;
+  qr: TIBQuery;
+  sqls: string;
+  tr: TIBTransaction;
+begin
+ if MainQr.RecordCount=0 then exit;
+ fm:=TfmEditBlank.Create(nil);
+ try
+  fm.Caption:=captionChange;
+  id:=MainQr.FieldByName('blank_id').AsInteger;
+  fm.edSeries.text:=Trim(MainQr.FieldByName('series').AsString);
+  fm.edNumFrom.text:=Trim(MainQr.FieldByName('num_from').DisplayText);
+  fm.edNumTo.text:=Trim(MainQr.FieldByName('num_to').DisplayText);
+  fm.CheckBoxVisible.Checked:=Boolean(MainQr.FieldByName('visible').AsInteger);
+
+  fm.bibOk.OnClick:=fm.OkClick;
+  fm.ChangeFlag:=false;
+
+  if fm.ShowModal=mrOk then begin
+
+    if not fm.ChangeFlag then exit;
+    valname:=Trim(fm.edSeries.Text);
+    Screen.Cursor:=crHourGlass;
+    tr:=TIBTransaction.Create(nil);
+    qr:=TIBQuery.Create(nil);
+    try
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Update '+TableBlanks+
+           ' set series='+QuotedStr(valname)+
+           ', num_from='+iff(Trim(fm.edNumFrom.text)<>'',Trim(fm.edNumFrom.text),'null')+
+           ', num_to='+iff(Trim(fm.edNumTo.text)<>'',Trim(fm.edNumTo.text),'null')+
+           ', visible='+IntToStr(Integer(fm.CheckBoxVisible.Checked))+
+           ' where blank_id='+IntToStr(id);
+
+     qr.SQL.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+    finally
+     qr.Free;
+     tr.Free;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     SetBlankNumFormat;
+     Mainqr.Locate('blank_id',id,[loCaseInsensitive]);
+     ViewCount;
+     Screen.Cursor:=crDefault;
+    end;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmBlanks.bibDelClick(Sender: TObject);
+
+  function DeleteRecord: Boolean;
+  var
+    qr: TIBQuery;
+    sqls: string;
+    tr: TIBTransaction;
+  begin
+   Screen.Cursor:=crHourGlass;
+   tr:=TIBTransaction.Create(nil);
+   qr:=TIBQuery.Create(nil);
+   try
+    result:=false;
+    try
+
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Delete from '+TableBlanks+' where blank_id='+
+            Mainqr.FieldByName('blank_id').asString;
+     qr.sql.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     SetBlankNumFormat;
+     Mainqr.Last;
+     ViewCount;
+     Result:=true;
+    except
+    end;
+   finally
+    qr.Free;
+    tr.Free;
+    Screen.Cursor:=crDefault;
+   end;
+
+  end;
+
+var
+  mr: TModalResult;  
+begin
+  if Mainqr.RecordCount=0 then exit;
+  mr:=MessageDlg('Удалить бланк?',mtConfirmation,[mbYes,mbNo],-1);
+  if mr=mrYes then begin
+    if not deleteRecord then begin
+      ShowError(Application.Handle,'Бланк <'+Mainqr.FieldByName('series').AsString+'> используется.');
+    end;
+  end;
+end;
+
+procedure TfmBlanks.bibFilterClick(Sender: TObject);
+var
+  fm: TfmEditBlank;
+  filstr: string;
+begin
+ fm:=TfmEditBlank.Create(nil);
+ try
+  fm.Caption:=CaptionFilter;
+
+  fm.bibOk.OnClick:=fm.filterClick;
+
+  if Trim(FindSeries)<>'' then fm.edSeries.Text:=FindSeries;
+
+  fm.edNumFrom.Enabled:=false;
+  fm.lbNumFrom.Enabled:=false;
+  fm.edNumTo.Enabled:=false;
+  fm.lbNumTo.Enabled:=false;
+  fm.CheckBoxVisible.Enabled:=false;
+  
+  fm.cbInString.Visible:=true;
+  fm.cbInString.Checked:=FilterInSide;
+  fm.ChangeFlag:=false;
+
+  if fm.ShowModal=mrOk then begin
+
+    FindSeries:=Trim(fm.edSeries.Text);
+    isFindSeries:=Trim(FindSeries)<>'';
+
+    FilterInSide:=fm.cbInString.Checked;
+    if FilterInSide then filstr:='%';
+
+    SaveFilter;
+    ActiveQuery;
+    ViewCount;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmBlanks.MR(Sender: TObject);
+begin
+  ModalResult:=mrOk;
+end;
+
+procedure TfmBlanks.edSearchKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+ tmps: string;
+begin
+  if not isValidKey(Char(Key)) then exit;
+  if MainQr.IsEmpty then exit;
+  if grid.SelectedField=nil then exit;
+  tmps:=grid.SelectedField.FullName;
+  MainQr.Locate(tmps,Trim(edSearch.Text),
+                [loPartialKey,loCaseInsensitive]);
+end;
+
+procedure TfmBlanks.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action:=caFree;
+end;
+
+procedure TfmBlanks.bibCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfmBlanks.GridTitleClick(Column: TColumn);
+var
+  fn: string;
+  id: integer;
+begin
+  if not MainQr.Active then exit;
+  if MainQr.RecordCount=0 then exit;
+  Screen.Cursor:=crHourGlass;
+  try
+   fn:=Column.FieldName;
+   id:=MainQr.fieldByName('blank_id').asInteger;
+   MainQr.Active:=false;
+   MainQr.SQL.Clear;
+   MainQr.SQL.Add('Select * from '+TableBlanks+GetFilterString+' Order by '+fn);
+   MainQr.Active:=true;
+   SetBlankNumFormat;
+   MainQr.First;
+   MainQr.Locate('blank_id',id,[loCaseInsensitive]);
+  finally
+    Screen.Cursor:=crDefault;
+  end;
+end;
+
+procedure TfmBlanks.FormDestroy(Sender: TObject);
+begin
+  Grid.Free;
+  if fsCreatedMDIChild in FormState then
+   fmBlanks:=nil;
+end;
+
+procedure TfmBlanks.SetImageFilter;
+begin
+  bibFilter.Glyph.Assign(nil);
+  bibFilter.Glyph.Width:=dm.IlMain.Width;
+  bibFilter.Glyph.Height:=dm.IlMain.Height;
+  if isFindSeries then begin
+    dm.IlMain.draw(bibFilter.Glyph.Canvas,0,0,0,true);
+  end else begin
+    dm.IlMain.draw(bibFilter.Glyph.Canvas,0,0,1,true);
+  end;
+end;
+
+procedure TfmBlanks.LoadFilter;
+var
+  fi: TIniFile;
+begin
+  fi:=TIniFile.Create(GetIniFileName);
+  try
+    FindSeries:=fi.ReadString('RBBlanks','Series',FindSeries);
+
+    FilterInside:=fi.ReadBool('RBChamber','Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+end;
+
+procedure TfmBlanks.SaveFilter;
+var
+  fi: TIniFile;
+begin
+  fi:=TIniFile.Create(GetIniFileName);
+  try
+    fi.WriteString('RBBlanks','Series',FindSeries);
+
+    fi.WriteBool('RBBlanks','Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+end;
+
+function TfmBlanks.GetFilterString: string;
+var
+  FilInSide: string;
+  wherestr: string;
+  addstr1: string;
+begin
+    Result:='';
+
+    isFindSeries:=Trim(FindSeries)<>'';
+
+    if isFindSeries then begin
+     wherestr:=' where ';
+    end else begin
+    end;
+
+    if FilterInside then FilInSide:='%';
+
+     if (isFindSeries)then begin
+        addstr1:=' Upper(series) like '+AnsiUpperCase(QuotedStr(FilInSide+FindSeries+'%'))+' ';
+     end;
+
+     Result:=wherestr+addstr1;
+
+end;
+
+procedure TfmBlanks.ViewCount;
+begin
+ if MainQr.Active then
+  lbCount.Caption:=ViewCountText+inttostr(GetRecordCount(Mainqr));
+end;
+
+procedure TfmBlanks.MainqrAfterOpen(DataSet: TDataSet);
+begin
+  ViewCount;
+end;
+
+procedure TfmBlanks.GridDblClick(Sender: TObject);
+begin
+  if not Mainqr.Active then exit;
+  if Mainqr.RecordCount=0 then exit;
+  bibChangeClick(nil);
+end;
+
+procedure TfmBlanks.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case Key of
+    VK_F2: if pnSQL.Visible then bibAdd.Click;
+    VK_F3: if pnSQL.Visible then bibChange.Click;
+    VK_F4: if pnSQL.Visible then bibDel.Click;
+//    VK_F5: bibRefresh.Click;
+    VK_F6: bibFilter.Click;
+  end;
+  fmMain.FormKeyDown(Sender,Key,Shift);
+end;
+
+procedure TfmBlanks.FormResize(Sender: TObject);
+begin
+  edSearch.Width:=Self.Width-edSearch.Left-pnBut.Width-8;
+end;
+
+procedure TfmBlanks.bibPrintClick(Sender: TObject);
+begin
+  CreateWordTableByGrid(Grid,Caption);
+end;
+
+procedure TfmBlanks.SetBlankNumFormat;
+var
+  Field: TField;
+begin
+  Field:=Mainqr.FindField('num_from');
+  if Assigned(Field) and (Field is TNumericField) then begin
+    TNumericField(Field).DisplayFormat:=DupeString('0',MaxBlankNumLength-1)+'#';
+  end;
+  Field:=Mainqr.FindField('num_to');
+  if Assigned(Field) and (Field is TNumericField) then begin
+    TNumericField(Field).DisplayFormat:=DupeString('0',MaxBlankNumLength-1)+'#';
+  end;
+end;
+
+end.

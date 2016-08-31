@@ -1,0 +1,74 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{58556644-645f-4add-8399-107ce4eeb7cf}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Projects Include="QuickRestore\quickrestore.dproj" />
+    <Projects Include="Resource\vcl100.bpl\vcl100.dproj" />
+    <Projects Include="Resource\vcldb100.bpl\vcldb100.dproj" />
+    <Projects Include="TestWord\testword.dproj" />
+    <Projects Include="Urdoc\urdoc.dproj" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Default.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+<BorlandProject xmlns=""><Default.Personality></Default.Personality></BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Target Name="urdoc">
+    <MSBuild Projects="Urdoc\urdoc.dproj" Targets="" />
+  </Target>
+  <Target Name="urdoc:Clean">
+    <MSBuild Projects="Urdoc\urdoc.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="urdoc:Make">
+    <MSBuild Projects="Urdoc\urdoc.dproj" Targets="Make" />
+  </Target>
+  <Target Name="quickrestore">
+    <MSBuild Projects="QuickRestore\quickrestore.dproj" Targets="" />
+  </Target>
+  <Target Name="quickrestore:Clean">
+    <MSBuild Projects="QuickRestore\quickrestore.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="quickrestore:Make">
+    <MSBuild Projects="QuickRestore\quickrestore.dproj" Targets="Make" />
+  </Target>
+  <Target Name="testword">
+    <MSBuild Projects="TestWord\testword.dproj" Targets="" />
+  </Target>
+  <Target Name="testword:Clean">
+    <MSBuild Projects="TestWord\testword.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="testword:Make">
+    <MSBuild Projects="TestWord\testword.dproj" Targets="Make" />
+  </Target>
+  <Target Name="vcl100">
+    <MSBuild Projects="Resource\vcl100.bpl\vcl100.dproj" Targets="" />
+  </Target>
+  <Target Name="vcl100:Clean">
+    <MSBuild Projects="Resource\vcl100.bpl\vcl100.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="vcl100:Make">
+    <MSBuild Projects="Resource\vcl100.bpl\vcl100.dproj" Targets="Make" />
+  </Target>
+  <Target Name="vcldb100">
+    <MSBuild Projects="Resource\vcldb100.bpl\vcldb100.dproj" Targets="" />
+  </Target>
+  <Target Name="vcldb100:Clean">
+    <MSBuild Projects="Resource\vcldb100.bpl\vcldb100.dproj" Targets="Clean" />
+  </Target>
+  <Target Name="vcldb100:Make">
+    <MSBuild Projects="Resource\vcldb100.bpl\vcldb100.dproj" Targets="Make" />
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="urdoc;quickrestore;testword;vcl100;vcldb100" />
+  </Target>
+  <Target Name="Clean">
+    <CallTarget Targets="urdoc:Clean;quickrestore:Clean;testword:Clean;vcl100:Clean;vcldb100:Clean" />
+  </Target>
+  <Target Name="Make">
+    <CallTarget Targets="urdoc:Make;quickrestore:Make;testword:Make;vcl100:Make;vcldb100:Make" />
+  </Target>
+  <Import Condition="Exists('$(MSBuildBinPath)\Borland.Group.Targets')" Project="$(MSBuildBinPath)\Borland.Group.Targets" />
+</Project>

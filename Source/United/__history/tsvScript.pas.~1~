@@ -1,0 +1,11 @@
+unit tsvScript;
+
+interface
+
+type
+
+  T
+
+implementation
+
+end.

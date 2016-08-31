@@ -1,0 +1,976 @@
+unit UPatchUtil;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, IBQuery, IBDatabase, IBTable,
+  db, UNewControls, Gauges, Variants;
+
+type
+
+  TControlProc=procedure (AOwner: TComponent; Control: TControl) of object;
+
+  TfmPatchUtil = class(TForm)
+    Panel1: TPanel;
+    Panel3: TPanel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    lv: TListView;
+    pmUtil: TPopupMenu;
+    Checkall1: TMenuItem;
+    Uncheckall1: TMenuItem;
+    GroupBox1: TGroupBox;
+    chbAddScrollBox: TCheckBox;
+    chbTownDefault: TCheckBox;
+    chbSetPropertyOnSecondSheet: TCheckBox;
+    chbSetDeal: TCheckBox;
+    chbSetFirstSheet: TCheckBox;
+    chbSetCurrentDate: TCheckBox;
+    chbChangeText: TCheckBox;
+    edWhat: TEdit;
+    edOnWhat: TEdit;
+    lbOnWhat: TLabel;
+    chbSetImenitPadeg: TCheckBox;
+    chbSetZoom: TCheckBox;
+    chbSetLabelEnd: TCheckBox;
+    chbSetGridSize: TCheckBox;
+    edSetGridSize: TEdit;
+    udSetGridSize: TUpDown;
+    chbSetFont: TCheckBox;
+    edSetFont: TEdit;
+    fd: TFontDialog;
+    btSetFont: TButton;
+    chbSetSignatureDate: TCheckBox;
+    edSetSignatureDate: TEdit;
+    chbSetMaskForCode: TCheckBox;
+    chbSetStyle: TCheckBox;
+    lbSetStyleFor: TLabel;
+    edSetStyleFor: TEdit;
+    cmbStyleName: TComboBox;
+    chbWithFields: TCheckBox;
+    chbChangeOldDate: TCheckBox;
+    chbSetNewSubs: TCheckBox;
+    edSetNewSubsField: TEdit;
+    lbSetNewSubs: TLabel;
+    edSetNewSubsValue: TEdit;
+    chbDeleteLabelByCaption: TCheckBox;
+    edDeleteLabelByCaption: TEdit;
+    chbDeleteElementByWord: TCheckBox;
+    edDeleteElementByWord: TEdit;
+    ProgressBar: TProgressBar;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Checkall1Click(Sender: TObject);
+    procedure Uncheckall1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure btSetFontClick(Sender: TObject);
+  private
+    isBreak: Boolean;
+    procedure DisabledControls(Yes: Boolean);
+
+    procedure AddScrollBoxControlProc(AOwner: TComponent; Control: TControl);
+    procedure SetTownDefaultControlProc(AOwner: TComponent; Control: TControl);
+    procedure SetPropertyOnSecondSheetControlProc(AOwner: TComponent; Control: TControl);
+    procedure SetDealControlProc(AOwner: TComponent; Control: TControl);
+    procedure SetCurrentDateProc(AOwner: TComponent; Control: TControl);
+    procedure SetImenitPadegProc(AOwner: TComponent; Control: TControl);
+    procedure SetLabelEndProc(AOwner: TComponent; Control: TControl);
+    procedure SetFontProc(AOwner: TComponent; Control: TControl);
+    procedure SetSignatureDateProc(AOwner: TComponent; Control: TControl);
+    procedure SetMaskForCodeProc(AOwner: TComponent; Control: TControl);
+    procedure SetOldDateProc(AOwner: TComponent; Control: TControl);
+    procedure SetNewSubsProc(AOwner: TComponent; Control: TControl);
+    procedure SetDeleteLabelByCaptionProc(AOwner: TComponent; Control: TControl);
+    procedure SetDeleteElementByWordProc(AOwner: TComponent; Control: TControl);
+
+
+    procedure DocChangeTextOnText(D: Variant; WhatText: String; OnWhatText: String);
+    procedure DocSetStyle(D: Variant);
+
+    procedure GetAllControls(wt: TWinControl; ControlProc: TControlProc);
+
+  public
+    procedure FillListDoc;
+    procedure Patch;
+  end;
+
+var
+  fmPatchUtil: TfmPatchUtil;
+
+implementation
+
+uses UDm, UNewForm, UMain, TypInfo, UUnited, ComObj, ActiveX, DsnFunc,
+  WordConst;
+
+{$R *.DFM}
+
+procedure TfmPatchUtil.BitBtn1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfmPatchUtil.FillListDoc;
+var
+  qr: TIBQuery;
+  tran: TIBTransaction;
+  sqls: string;
+  li: TListItem;
+begin
+  Screen.Cursor:=crHourGlass;
+  qr:=TIBQuery.Create(nil);
+  tran:=TIBTransaction.Create(nil);
+  lv.Items.BeginUpdate;
+  try
+   qr.Database:=dm.IBDbase;
+   tran.AddDatabase(dm.IBDbase);
+   dm.IBDbase.AddTransaction(tran);
+   tran.Params.Text:=DefaultTransactionParamsTwo;
+   qr.ParamCheck:=false;
+   qr.Transaction:=tran;
+   qr.Transaction.Active:=true;
+   sqls:='Select * from '+TableDoc+' order by name';
+   qr.SQL.Text:=sqls;
+   qr.Active:=true;
+   qr.First;
+   lv.Items.Clear;
+   while not qr.Eof do begin
+    li:=Lv.Items.Add;
+    li.Caption:=qr.FieldByName('name').AsString;
+    li.SubItems.Add(qr.FieldByName('lastdate').AsString);
+    li.Data:=Pointer(qr.FieldByName('doc_id').AsInteger);
+    qr.Next;
+   end;
+  finally
+   Caption:='Обновление базы данных - '+inttostr(LV.Items.Count); 
+   lv.Items.EndUpdate;
+   qr.Free;
+   tran.Free;
+   Screen.Cursor:=crDefault;
+  end;
+end;
+
+procedure TfmPatchUtil.FormCreate(Sender: TObject);
+begin
+  FillListDoc;
+  DisabledControls(false);
+  edSetFont.Text:=edSetFont.Font.Name;
+end;
+
+procedure TfmPatchUtil.Patch;
+
+  function GetRealCheckedCount: Integer;
+  var
+    i: Integer;
+  begin
+    Result:=0;
+    for i:=0 to LV.Items.Count-1 do
+      if LV.Items[i].Checked then
+        Inc(Result);
+  end;
+
+var
+  i: Integer;
+  li: TListItem;
+  tb: TIBTable;
+  tran: TIBTransaction;
+  ms: TMemoryStream;
+  doc_id: Integer;
+  fm: TfmNewForm;
+  tmps: string;
+  FileDoc: string;
+  datestr,timestr: string;
+  D: Variant;
+  isPost: Boolean;
+  Error: Boolean;
+begin
+  Screen.Cursor:=crHourGlass;
+  tran:=TIBTransaction.Create(nil);
+  ms:=TMemoryStream.Create;
+  tb:=TIBTable.Create(nil);
+  try
+    tb.Database:=dm.IBDbase;
+    tb.Transaction:=tran;
+    tran.AddDatabase(dm.IBDbase);
+    dm.IBDbase.AddTransaction(tran);
+    tran.Params.Text:=DefaultTransactionParamsTwo;
+    DisabledControls(true);
+    isBreak:=false;
+    ProgressBar.Position:=0;
+    ProgressBar.Min:=0;
+    ProgressBar.Max:=GetRealCheckedCount;
+    ProgressBar.Visible:=true;
+    for i:=0 to lv.Items.Count-1 do begin
+      li:=lv.Items[i];
+      if Li.Checked then begin
+       try
+        li.Selected:=true;
+        li.MakeVisible(true);
+        if isBreak then exit;
+        ProgressBar.Position:=i;
+        ProgressBar.Update;
+        Application.ProcessMessages;
+
+        doc_id:=Integer(li.data);
+        tb.Active:=false;
+        tb.tablename:=AnsiUpperCase(TableDoc);
+        tb.Active:=true;
+        tb.Filter:=' doc_id='+inttostr(doc_id)+' ';
+        tb.Filtered:=true;
+        tb.Transaction.Active:=true;
+        tb.Edit;
+
+        tb.FieldByname('LASTDATE').Value:=Now;
+        
+        isPost:=false;
+        // form
+        if chbAddScrollBox.Checked or
+           chbTownDefault.Checked or
+           chbSetPropertyOnSecondSheet.Checked or
+           chbSetDeal.Checked or
+           chbSetFirstSheet.Checked or
+           chbSetCurrentDate.Checked or
+           chbSetImenitPadeg.Checked or
+           chbSetLabelEnd.Checked or
+           chbSetGridSize.Checked or
+           chbSetFont.Checked or
+           chbSetSignatureDate.Checked or
+           chbSetMaskForCode.Checked or
+           chbChangeOldDate.Checked or
+           chbSetNewSubs.Checked or
+           chbDeleteLabelByCaption.Checked or
+           chbDeleteElementByWord.Checked
+           then begin
+
+          ms.Clear;
+          TBlobField(tb.FieldByName('dataform')).SaveToStream(ms);
+          ExtractObjectFromStream(ms);
+          if ms.Size>0 then begin
+            fm:=TfmNewForm.Create(fmMain);
+            try
+             fm.Visible:=false;
+             ms.Position:=0;
+             FreeAllComponents(fm);
+             Error:=false;
+             LoadControlFromStream(fm,ms,Error);
+             if not Error then begin
+
+               fm.DestroyHeaderAndCreateNew;
+               fm.InitAll;
+
+               fm.Position:=poScreenCenter;
+               fm.WindowState:=wsMaximized;
+
+               if chbAddScrollBox.Checked then GetAllControls(fm,AddScrollBoxControlProc);
+               if chbTownDefault.Checked then GetAllControls(fm,SetTownDefaultControlProc);
+               if chbSetPropertyOnSecondSheet.Checked then GetAllControls(fm,SetPropertyOnSecondSheetControlProc);
+               if chbSetDeal.Checked then GetAllControls(fm,SetDealControlProc);
+               if chbSetFirstSheet.Checked then fm.SetFirstTabSheet;
+               if chbSetCurrentDate.Checked then GetAllControls(fm,SetCurrentDateProc);
+               if chbSetImenitPadeg.Checked then GetAllControls(fm,SetImenitPadegProc);
+               if chbSetLabelEnd.Checked then GetAllControls(fm,SetLabelEndProc);
+               if chbSetGridSize.Checked then fm.GridSize:=udSetGridSize.Position;
+               if chbSetFont.Checked then GetAllControls(fm,SetFontProc);
+               if chbSetSignatureDate.Checked then GetAllControls(fm,SetSignatureDateProc);
+               if chbSetMaskForCode.Checked then GetAllControls(fm,SetMaskForCodeProc);
+               if chbChangeOldDate.Checked then GetAllControls(fm,SetOldDateProc);
+               if chbSetNewSubs.Checked then  GetAllControls(fm,SetNewSubsProc);
+               if chbDeleteLabelByCaption.Checked then GetAllControls(fm,SetDeleteLabelByCaptionProc);
+               if chbDeleteElementByWord.Checked then GetAllControls(fm,SetDeleteElementByWordProc);
+
+               ms.Clear;
+               SaveControlToStream(fm,ms);
+             end;
+
+            finally
+             fm.Free;
+            end;
+            ms.Position:=0;
+            CompressAndCrypt(ms);
+            ms.Position:=0;
+            TBlobField(tb.FieldByName('dataform')).LoadFromStream(ms);
+            isPost:=true;
+         end else begin
+           raise Exception.Create('Форма не найдена.');
+         end;
+        end;
+
+        // document
+        if chbChangeText.Checked or
+           chbSetZoom.Checked or
+           chbSetStyle.Checked
+           then begin
+          ms.Clear;
+          TBlobField(tb.FieldByName('datadoc')).SaveToStream(ms);
+          ExtractObjectFromStream(ms);
+          if ms.Size>0 then begin
+            timestr:=FormatDateTime(fmtFileTime,WorkDate);
+            datestr:=FormatDateTimeTSV(fmtDateLong,WorkDate);
+            tmps:=tb.FieldByname('name').AsString+' ('+timestr+', ' +datestr+').doc';
+            FileDoc:=GetUniqueFileName(TempDocFilePath+'\'+tmps,0);
+            ms.SaveToFile(FileDoc);
+
+            D:=GetDocumentRefByFileName(FileDoc);
+            if not VarIsEmpty(D) then begin
+
+             if chbChangeText.Checked then DocChangeTextOnText(D,edWhat.Text,edOnWhat.Text);
+             if chbSetZoom.Checked then D.ActiveWindow.View.Zoom.PageFit:=wdPageFitBestFit;
+             if chbSetStyle.Checked then DocSetStyle(D);
+
+             D.Saved:=false;
+             D.Close(SaveChanges:=true);
+            end;
+
+            ms.LoadfromFile(FileDoc);
+            ms.Position:=0;
+            CompressAndCrypt(ms);
+            ms.Position:=0;
+            TBlobField(tb.FieldByName('datadoc')).LoadFromStream(ms);
+            isPost:=true;
+          end else begin
+            raise Exception.Create('Документ не найден.');
+          end;  
+        end;
+
+        if isPost then begin
+          tb.Post;
+          tb.Transaction.Commit;
+          li.Checked:=false;
+        end;  
+       except
+        on E: Exception do begin
+         MessageDlg(E.Message,mtError,[mbOk],-1);
+        end; 
+       end; 
+      end;
+    end;
+  finally
+   CloseWord;
+   ProgressBar.Visible:=false;
+   tb.Free;
+   ms.Free;
+   tran.Free;
+   Screen.Cursor:=crDefault;
+   DisabledControls(false);
+  end;
+end;
+
+
+procedure TfmPatchUtil.DisabledControls(Yes: Boolean);
+begin
+  lv.Enabled:=not Yes;
+  chbAddScrollBox.Enabled:=not Yes;
+  chbTownDefault.Enabled:=not Yes;
+  chbSetPropertyOnSecondSheet.Enabled:=not Yes;
+  chbSetFirstSheet.Enabled:=not Yes;
+  chbSetCurrentDate.Enabled:=not Yes;
+  chbSetImenitPadeg.Enabled:=not Yes;
+  chbSetLabelEnd.Enabled:=not Yes;
+  chbChangeOldDate.Enabled:=not Yes;
+  chbSetGridSize.Enabled:=not Yes;
+  edSetGridSize.Enabled:=not Yes;
+  udSetGridSize.Enabled:=not Yes;
+  chbSetFont.Enabled:=not Yes;
+  edSetFont.Enabled:=not Yes;
+  btSetFont.Enabled:=not Yes;
+  chbSetSignatureDate.Enabled:=not Yes;
+  edSetSignatureDate.Enabled:=not Yes;
+  chbSetMaskForCode.Enabled:=not Yes;
+  chbSetNewSubs.Enabled:=not Yes;
+  edSetNewSubsField.Enabled:=not Yes;
+  lbSetNewSubs.Enabled:=not Yes;
+  edSetNewSubsValue.Enabled:=not Yes;
+  chbSetDeal.Enabled:=not Yes;
+  chbDeleteLabelByCaption.Enabled:=not Yes;
+  edDeleteLabelByCaption.Enabled:=not Yes;
+  chbDeleteElementByWord.Enabled:=not Yes;
+  edDeleteElementByWord.Enabled:=not Yes;
+
+  chbChangeText.Enabled:=not Yes;
+  edWhat.Enabled:=not Yes;
+  lbOnWhat.Enabled:=not Yes;
+  edOnWhat.Enabled:=not Yes;
+  chbSetZoom.Enabled:=not Yes;
+  chbWithFields.Enabled:=not Yes;
+
+  chbSetStyle.Enabled:=not Yes;
+  cmbStyleName.Enabled:=not Yes;
+  lbSetStyleFor.Enabled:=not Yes;
+  edSetStyleFor.Enabled:=not Yes;
+
+  
+  BitBtn2.Enabled:=not Yes;
+  BitBtn3.Enabled:=Yes;
+
+end;
+
+procedure TfmPatchUtil.Checkall1Click(Sender: TObject);
+var
+  i: Integer;
+begin
+  lv.Items.BeginUpdate;
+  try
+   for i:=0 to lv.Items.Count-1 do
+     lv.Items[i].Checked:=true;
+  finally
+   lv.Items.EndUpdate;
+  end; 
+end;
+
+procedure TfmPatchUtil.Uncheckall1Click(Sender: TObject);
+var
+  i: Integer;
+begin
+  lv.Items.BeginUpdate;
+  try
+   for i:=0 to lv.Items.Count-1 do
+     lv.Items[i].Checked:=false;
+  finally
+   lv.Items.EndUpdate;
+  end; 
+end;
+
+procedure TfmPatchUtil.BitBtn2Click(Sender: TObject);
+begin
+  Patch;
+end;
+
+procedure TfmPatchUtil.BitBtn3Click(Sender: TObject);
+begin
+  isBreak:=true;
+end;
+
+function ListCompare(Item1, Item2: Pointer): Integer;
+var
+  ct1,ct2: TWinControl;
+begin
+  Result:=0;
+  ct1:=Item1;
+  ct2:=Item2;
+  if (ct1<>nil) and (ct2<>nil) then begin
+   if ct2.TabOrder>ct1.TabOrder then Result:=-1;
+   if ct2.TabOrder<ct1.TabOrder then Result:=1;
+  end; 
+end;
+
+procedure TfmPatchUtil.GetAllControls(wt: TWinControl; ControlProc: TControlProc);
+
+  procedure RecurseAllControl(wtParent: TWinControl);
+  var
+    i: Integer;
+    ct: TControl;
+    ListSort,ListNoSort: TList;
+  begin
+    ControlProc(wt,wtParent);
+    ListSort:=TList.Create;
+    ListNoSort:=TList.Create;
+    try
+     for i:=0 to wtParent.ControlCount-1 do begin
+      ct:=wtParent.Controls[i];
+      if ct is TWinControl then
+       ListSort.Add(ct)
+      else ListNoSort.Add(ct);
+     end;
+     ListSort.Sort(ListCompare);
+     for i:=0 to ListNoSort.Count-1 do begin
+       ControlProc(wt,TControl(ListNoSort.Items[i]));
+     end;
+     for i:=0 to ListSort.Count-1 do begin
+       RecurseAllControl(TWinControl(ListSort.Items[i]));
+     end;
+    finally
+      ListSort.Free;
+      ListNoSort.Free;
+    end; 
+  end;
+  
+begin
+  if @ControlProc=nil then exit;
+  if wt=nil then exit;
+  RecurseAllControl(wt);
+end;
+
+procedure TfmPatchUtil.AddScrollBoxControlProc(AOwner: TComponent; Control: TControl);
+
+  function GetScrollBoxName(ts: TTabSheet): String;
+  begin
+    Result:='scrlbx'+ts.Name;
+  end;
+
+  function GetScrollBoxByTabSheet(ts: TTabSheet): TScrollBox;
+  begin
+    Result:=TScrollBox(ts.FindChildControl(GetScrollBoxName(ts)));
+  end;
+
+var
+  scb: TScrollBox;
+  ts: TTabSheet;
+begin
+  if Control<>nil then
+    if not (Control is TScrollBox) then
+     if Control.Parent<>nil then
+       if Control.Parent is TTabSheet then begin
+         ts:=TTabSheet(Control.Parent);
+         scb:=GetScrollBoxByTabSheet(ts);
+         if scb=nil then begin
+          scb:=TScrollBox.Create(AOwner);
+          scb.Name:=GetScrollBoxName(ts);
+          scb.Align:=alClient;
+          scb.BorderStyle:=bsNone;
+          scb.Parent:=Control.Parent;
+         end;
+         if scb<>nil then
+          Control.Parent:=scb;
+       end;
+end;
+
+procedure TfmPatchUtil.SetTownDefaultControlProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  APos: Integer;
+  S: TIntegerSet;
+const
+  ConstProp=ConstPropDocFieldName;
+  ConstPropPlus='InsertedValues';
+begin
+  if Control<>nil then
+    if isNewControl(Control) then begin
+      if IsPublishedProp(Control,ConstProp) then begin
+       tmps:=GetStrProp(Control,ConstProp);
+       APos:=AnsiPos(AnsiUpperCase('город'),AnsiUpperCase(tmps));
+       if APos>0 then begin
+         Integer(S):=GetOrdProp(Control,ConstPropPlus);
+         Include(S,Integer(tivFromConstTownDefault));
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+       end;
+      end; 
+    end;
+end;
+
+procedure TfmPatchUtil.SetPropertyOnSecondSheetControlProc(AOwner: TComponent; Control: TControl);
+var
+  ts: TTabSheet;
+  List: TList;
+  i: Integer;
+  S: TIntegerSet;
+const
+  ConstPropPlus='InsertedValues';
+begin
+  if Control<>nil then
+   if Control is TTabSheet then begin
+     ts:=TTabSheet(Control);
+     if ts.TabIndex=1 then
+      if AOWner is TfmNewForm then begin
+       List:=TList.Create;
+       try
+        TfmNewForm(AOWner).GetListImenitControls(ts,List);
+        for i:=0 to List.Count-1 do begin
+          if i=0 then begin
+           Integer(S):=GetOrdProp(TControl(List.Items[i]),ConstPropPlus);
+           Include(S,Integer(tivFromHeaderFIO));
+           SetOrdProp(TControl(List.Items[i]),ConstPropPlus,Integer(S));
+          end else break;
+        end;
+       finally
+         List.Free;
+       end;
+      end;
+   end;
+end;
+
+procedure TfmPatchUtil.SetDealControlProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  APos1,APos2: Integer;
+  S: TIntegerSet;
+const
+  ConstProp=ConstPropDocFieldName;
+  ConstPropPlus='InsertedValues';
+begin
+  if Control<>nil then
+   if not (Control is TnewLabel) and not (Control is TLabel) then begin
+     if IsPublishedProp(Control,ConstProp) then begin
+       tmps:=GetStrProp(Control,ConstProp);
+       APos1:=AnsiPos(AnsiUpperCase('умерш'),AnsiUpperCase(tmps));
+       APos2:=AnsiPos(AnsiUpperCase('(ИМ.П.)'),AnsiUpperCase(tmps));
+       if (APos1>0)and(APos2>0) then begin
+         S:=[];
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+         Include(S,Integer(tivFromDealFIO));
+         SetOrdProp(Control,ConstPropPlus,Integer(S)); 
+       end;
+       APos1:=AnsiPos(AnsiUpperCase('дата смерти'),AnsiUpperCase(tmps));
+       if APos1>0 then begin
+         S:=[];
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+         Include(S,Integer(tivFromDealDeathDate));
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+       end;
+       APos1:=AnsiPos(AnsiUpperCase('номер дела'),AnsiUpperCase(tmps));
+       if APos1>0 then begin
+         S:=[];
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+         Include(S,Integer(tivFromDealNum));
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+       end;
+       APos1:=AnsiPos(AnsiUpperCase('дел'),AnsiUpperCase(tmps));
+       APos2:=AnsiPos(AnsiUpperCase('наследствен'),AnsiUpperCase(tmps));
+       if (APos1>0)and(APos2>0) then begin
+         S:=[];
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+         Include(S,Integer(tivFromDealNum));
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+       end;
+       APos1:=AnsiPos(AnsiUpperCase('н/д'),AnsiUpperCase(tmps));
+       if APos1>0 then begin
+         S:=[];
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+         Include(S,Integer(tivFromDealNum));
+         SetOrdProp(Control,ConstPropPlus,Integer(S));
+       end;
+     end;
+   end;
+end;
+
+procedure TfmPatchUtil.SetCurrentDateProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  APos1,APos2: Integer;
+const
+  ConstProp=ConstPropDocFieldName;
+  ConstPropWrittenOut='WrittenOut';   // woLong;
+  ConstPropDateFormat='DateFormat';   // dfLong;
+  ConstPropTypeUpperLower='TypeUpperLower';   // tulFirstUpper;
+begin
+  if Control<>nil then
+    if isNewControl(Control) then begin
+      if IsPublishedProp(Control,ConstProp)and
+         IsPublishedProp(Control,ConstPropWrittenOut)and
+         IsPublishedProp(Control,ConstPropDateFormat)and
+         IsPublishedProp(Control,ConstPropTypeUpperLower) then begin
+       tmps:=GetStrProp(Control,ConstProp);
+       APos1:=AnsiPos(AnsiUpperCase('сегодняшняя дата'),AnsiUpperCase(tmps));
+       APos2:=AnsiPos(AnsiUpperCase('сег.дата'),AnsiUpperCase(tmps));
+       if (APos1>0) or (APos2>0) then begin
+         SetOrdProp(Control,ConstPropWrittenOut,Integer(woLong));
+         SetOrdProp(Control,ConstPropDateFormat,Integer(dfLong));
+         SetOrdProp(Control,ConstPropTypeUpperLower,Integer(tulFirstUpper));
+       end;
+       if (APos2>0) then begin
+         SetStrProp(Control,ConstProp,'Сегодняшняя дата');
+       end;
+      end;
+    end;
+end;
+
+procedure TfmPatchUtil.SetImenitPadegProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  TypeCase: TTypeCase;
+const
+  ConstProp=ConstPropDocFieldName;
+  ConstPropTypeCase='TypeCase';   // tcIminit;
+begin
+  if Control<>nil then
+    if isNewControl(Control) then begin
+      if IsPublishedProp(Control,ConstProp)and
+         IsPublishedProp(Control,ConstPropTypeCase) then begin
+       tmps:=GetStrProp(Control,ConstProp);
+       if Trim(tmps)='' then begin
+         TypeCase:=TTypeCase(GetOrdProp(Control,ConstPropTypeCase));
+         if TypeCase=tcIminit then
+          SetStrProp(Control,ConstProp,'Тест (ИМ.П.)');
+       end;
+      end;
+    end;
+end;
+
+procedure TfmPatchUtil.SetLabelEndProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  fm: TCustomForm;
+  news: string;
+const
+  ConstProp='Caption';
+  ConstPropAlignment='Alignment'; // taRightJustify
+begin
+  if Control<>nil then
+      if IsPublishedProp(Control,ConstProp) then begin
+       if (Control is TLabel) or (Control is TNewLabel) then begin
+        tmps:=GetStrProp(Control,ConstProp);
+        if Trim(tmps)<>'' then begin
+         news:=Trim(tmps);
+         if news[Length(news)]<>':' then
+          SetStrProp(Control,ConstProp,Trim(news)+':');
+        end;
+        fm:=GetParentForm(Control);
+        if fm<>nil then
+         if fm is TfmNewForm then
+          if Control.Parent<>TfmNewForm(fm).grbDoplnit then
+           SetOrdProp(Control,ConstPropAlignment,Integer(taRightJustify));
+       end;
+      end;
+end;
+
+procedure TfmPatchUtil.SetFontProc(AOwner: TComponent; Control: TControl);
+var
+  fm: TCustomForm;
+const
+  ConstProp='Font';
+begin
+  if Control<>nil then begin
+    fm:=GetParentForm(Control);
+    if fm is TfmNewForm then begin
+      fm.Font.Assign(edSetFont.Font);
+    end;
+     if fm<>nil then
+      if Control<>fm then
+       if IsPublishedProp(Control,ConstProp) then begin
+        if Control<>TfmNewForm(fm).FindComponent('lbCompanyName') then
+         if Control<>TfmNewForm(fm).grbDoplnit then
+          if Control.Parent<>TfmNewForm(fm).grbDoplnit then begin
+           if TfmNewForm(fm).grbDoplnit<>nil then
+            if Control<>TfmNewForm(fm).grbDoplnit.Parent then
+              SetObjectProp(Control,ConstProp,edSetFont.Font);
+          end;
+     end;
+  end;
+end;
+
+procedure TfmPatchUtil.SetSignatureDateProc(AOwner: TComponent; Control: TControl);
+const
+  ConstProp='Signature';
+begin
+  if Control<>nil then begin
+   if IsPublishedProp(Control,ConstProp) then begin
+     if Control is TNewDateTimePicker then
+      if TNewDateTimePicker(Control).Kind<>dtkTime then
+       SetStrProp(Control,ConstProp,edSetSignatureDate.Text);
+   end;
+  end;
+end;
+
+procedure TfmPatchUtil.SetMaskForCodeProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  APos: Integer;
+  me: TNewMaskEdit;
+  fm: TCustomForm;
+  OldTabOrder: TTabOrder;
+const
+  ConstProp=ConstPropDocFieldName;
+begin
+  if Control<>nil then
+    if IsPublishedProp(Control,ConstProp) then begin
+      fm:=GetParentForm(Control);
+      if fm<>nil then begin
+        tmps:=GetStrProp(Control,ConstProp);
+        APos:=AnsiPos(AnsiUpperCase('код подразделения'),AnsiUpperCase(tmps));
+        if APos>0 then begin
+          if (Control is TWinControl)and not (Control is TNewMaskEdit)then begin
+            OldTabOrder:=TWinControl(Control).TabOrder;
+            me:=TNewMaskEdit.Create(fm);
+            me.Parent:=Control.Parent;
+            me.SetBounds(Control.Left,Control.Top,Control.Width,Control.Height);
+            me.EditMask:='999-999';
+            me.Name:=DsnCheckNameNew(fm,me,'NewMaskEdit');
+            me.DocFieldName:=tmps;
+
+            if Control.Parent<>nil then begin
+              Control.Parent.RemoveControl(Control);
+            end;
+            Control.Free;
+            Control:=nil;
+            me.TabOrder:=OldTabOrder;
+          end;
+        end;
+
+        if Control<>nil then
+         if Control is TNewMaskEdit then begin
+          TNewMaskEdit(Control).Name:=DsnCheckNameNew(fm,Control,'NewMaskEdit');
+         end;
+      end;
+    end;
+end;
+
+procedure TfmPatchUtil.SetNewSubsProc(AOwner: TComponent; Control: TControl);
+var
+  tmps: string;
+  Apos: Integer;
+const
+  ConstProp=ConstPropDocFieldName;
+  ConstPropSubs='Subs';
+begin
+  if Control<>nil then
+    if isNewControl(Control) then begin
+      if IsPublishedProp(Control,ConstProp)and
+         IsPublishedProp(Control,ConstPropSubs) then begin
+       tmps:=GetStrProp(Control,ConstProp);
+       Apos:=AnsiPos(AnsiUpperCase(Trim(edSetNewSubsField.Text)),AnsiUpperCase(tmps));
+       if Apos>0 then begin
+         SetStrProp(Control,ConstPropSubs,Trim(edSetNewSubsValue.Text));
+       end;
+      end;
+    end;
+end;
+
+procedure TfmPatchUtil.SetOldDateProc(AOwner: TComponent; Control: TControl);
+var
+  dtp: TNewDateTimePicker;
+  de: TNewRxDateEdit;
+  fm: TCustomForm;
+  OldTabOrder: TTabOrder;
+  Apos: Integer;
+begin
+  if Control<>nil then begin
+    fm:=GetParentForm(Control);
+    if (Control is TNewDateTimePicker)then begin
+      if TNewDateTimePicker(Control).Kind<>dtkTime then begin
+        dtp:=TNewDateTimePicker(Control);
+        OldTabOrder:=dtp.TabOrder;
+        de:=TNewRxDateEdit.Create(fm);
+        de.Parent:=Control.Parent;
+        de.SetBounds(Control.Left,Control.Top,90,Control.Height);
+        de.Name:=DsnCheckNameNew(fm,de,'NewRxDateEdit');
+        de.DocFieldName:=dtp.DocFieldName;
+        de.DocFile:=dtp.DocFile;
+        de.WrittenOut:=dtp.WrittenOut;
+        de.TypeUpperLower:=dtp.TypeUpperLower;
+        de.Signature:=dtp.Signature;
+        de.ToSign:=dtp.ToSign;
+        de.Links.Assign(dtp.Links);
+        de.InsertedValues:=dtp.InsertedValues;
+        de.Subs:=dtp.Subs;
+        de.WordStyle:=dtp.WordStyle;
+        de.WordAutoFormat:=dtp.WordAutoFormat;
+        de.Blocking:=dtp.Blocking;
+        de.DateFormat:=dtp.DateFormat;
+        de.Hint:=dtp.Hint;
+        Apos:=AnsiPos(AnsiUpperCase(ChangeString(Trim(TNewDateTimePicker(Control).DocFieldName),' ','')),AnsiUpperCase('Сегодняшняядата'));
+        if Apos>0 then de.DefaultWorkDate:=true;
+        Apos:=AnsiPos(AnsiUpperCase(ChangeString(Trim(TNewDateTimePicker(Control).DocFieldName),' ','')),AnsiUpperCase('Сег.дата'));
+        if Apos>0 then de.DefaultWorkDate:=true;
+
+        if Control.Parent<>nil then begin
+          Control.Parent.RemoveControl(Control);
+        end;
+        Control.Free;
+        Control:=nil;
+        de.TabOrder:=OldTabOrder;
+      end;  
+    end;
+
+    if Control<>nil then
+     if Control is TNewRxDateEdit then begin
+       TNewRxDateEdit(Control).Name:=DsnCheckNameNew(fm,Control,'NewRxDateEdit');
+     end;
+  end;
+end;
+
+procedure TfmPatchUtil.SetDeleteLabelByCaptionProc(AOwner: TComponent; Control: TControl);
+var
+  Apos: Integer;
+begin
+  if Control<>nil then begin
+    if (Control is TLabel)then begin
+        Apos:=AnsiPos(AnsiUpperCase(edDeleteLabelByCaption.Text),AnsiUpperCase(TLabel(Control).Caption));
+        if Apos>0 then begin
+          if Control.Parent<>nil then begin
+            Control.Parent.RemoveControl(Control);
+          end;
+          Control.Free;
+        end;  
+    end;
+  end;
+end;
+
+procedure TfmPatchUtil.SetDeleteElementByWordProc(AOwner: TComponent; Control: TControl);
+var
+  Apos: Integer;
+  tmps: string;
+const
+  ConstProp=ConstPropDocFieldName;
+begin
+  if Control<>nil then
+    if isNewControl(Control) then begin
+      if IsPublishedProp(Control,ConstProp) then begin
+        tmps:=GetStrProp(Control,ConstProp);
+        Apos:=AnsiPos(AnsiUpperCase(edDeleteElementByWord.Text),AnsiUpperCase(tmps));
+        if Apos>0 then begin
+          if Control.Parent<>nil then begin
+            Control.Parent.RemoveControl(Control);
+          end;
+          Control.Free;
+        end;
+    end;
+  end;
+end;
+
+procedure TfmPatchUtil.DocChangeTextOnText(D: Variant; WhatText: String; OnWhatText: String);
+var
+  Selection: Variant;
+begin
+  if chbWithFields.Checked then
+    D.Fields.ToggleShowCodes;
+  Selection:=D.Content;
+  Selection.Find.ClearFormatting;
+  Selection.Find.Replacement.ClearFormatting;
+  Selection.Find.Text := WhatText;
+  Selection.Find.Replacement.Text := OnWhatText;
+  Selection.Find.Forward := True;
+  Selection.Find.Wrap := wdFindContinue;
+  Selection.Find.Format := False;
+  Selection.Find.MatchCase := False;
+  Selection.Find.MatchWholeWord := False;
+  Selection.Find.MatchWildcards := False;
+  Selection.Find.MatchSoundsLike := False;
+  Selection.Find.MatchAllWordForms := False;
+  Selection.Find.Execute(Replace:=wdReplaceAll);
+  if chbWithFields.Checked then
+    D.Fields.ToggleShowCodes;
+  D.Fields.Update;
+end;
+
+
+procedure TfmPatchUtil.btSetFontClick(Sender: TObject);
+begin
+   fd.Font.Assign(edSetFont.Font);
+   if not fd.Execute then exit;
+   edSetFont.Font.Assign(fd.Font);
+   edSetFont.Text:=fd.Font.Name;
+end;
+
+procedure TfmPatchUtil.DocSetStyle(D: Variant);
+var
+  Selection,Style: Variant;
+begin
+  Selection:=D.Content;
+  Selection.Find.ClearFormatting;
+  Selection.Find.Replacement.ClearFormatting;
+  Selection.Find.Text := edSetStyleFor.text;
+  Selection.Find.Replacement.Text := edSetStyleFor.text;
+  Selection.Find.Replacement.Highlight:=true;  
+
+  Selection.Find.Forward := True;
+  Selection.Find.Wrap := wdFindAsk;
+  Selection.Find.Format := true;
+  Selection.Find.MatchCase := False;
+  Selection.Find.MatchWholeWord := False;
+  Selection.Find.MatchWildcards := False;
+  Selection.Find.MatchSoundsLike := False;
+  Selection.Find.MatchAllWordForms := False;
+  try
+    Style:=D.Styles.Item(cmbStyleName.Text);
+    Selection.Find.Replacement.Style:=Style;
+  except
+    raise Exception.Create('Стиль '+cmbStyleName.Text+' не найден.');
+  end; 
+  Selection.Find.Execute(Replace:=wdReplaceAll);
+  D.UpdateStyles;
+end;
+
+
+end.
+

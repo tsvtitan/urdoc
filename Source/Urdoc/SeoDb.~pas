@@ -1,0 +1,325 @@
+unit SeoDb;
+
+interface
+
+uses Classes, DB,
+     SeoClientDataSet,
+     SeoDbIntf, SeoConfigIntf, SeoLogIntf, SeoCrypterIntf;
+
+type
+
+
+  TSeoDb=class(TComponent,ISeoDb)
+  private
+    FFileName: string;
+    FIsInit: Boolean;
+    FConfig: ISeoConfig;
+    FDisplayName: String;
+    FCrypter: ISeoCrypter;
+    FDataSet: TSeoClientDataSet;
+    FLog: ISeoLog;
+    FCipherKey: String;
+    FOldHash: string;
+    function GetChanges: Boolean;
+    function GetNewHash: string;
+    function GetConfig: ISeoConfig; stdcall;
+    function GetDisplayName: String; stdcall;
+    function GetLog: ISeoLog; stdcall;
+    function GetFileName: String; stdcall;
+    function GetActive: Boolean; stdcall;
+    function GetDataSet: TDataSet; stdcall;
+  protected
+    procedure LogWrite(const Message: string; LogType: TSeoLogType; Both: Boolean);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    { ISeoAdmDb }
+    procedure Init(const FileName: string); stdcall;
+    procedure Done; stdcall;
+
+
+    procedure ReCreate(const FileName: String); stdcall;
+
+    procedure LoadFromFile(const FileName: String); stdcall;
+    procedure SaveToFile(const FileName: String); stdcall;
+
+    function ReadParam(const AName: String; var AValue: String): WordBool; stdcall;
+    procedure WriteParam(const AName, AValue: String; IsNew: WordBool); stdcall;
+    function DeleteParam(const AName: String): WordBool; stdcall;
+    function ExistsParam(const AName: String): WordBool; stdcall;
+    procedure UpdateFile(IgnoreChanges: Boolean=false); stdcall;
+
+    function HashValue(Field: TBlobField): String; stdcall;
+
+    property Log: ISeoLog read FLog write FLog;
+    property Config: ISeoConfig read FConfig write FConfig;
+    property DisplayName: string read FDisplayName write FDisplayName;
+    property FileName: string read FFileName;
+    property Crypter: ISeoCrypter read FCrypter write FCrypter;
+    property CipherKey: String read FCipherKey write FCipherKey;
+    property DataSet: TSeoClientDataSet read FDataSet;
+    property Changes: Boolean read GetChanges; 
+  end;
+
+
+implementation
+
+uses SysUtils, IdCoder, IdCoder3to4,
+     SeoDbConsts, SeoCoderMIME, SeoUtils, SeoKeys;
+
+{ TSeoDb }
+
+constructor TSeoDb.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FDataSet:=TSeoClientDataSet.Create(nil);
+end;
+
+destructor TSeoDb.Destroy;
+begin
+  FDataSet.Free;
+  inherited Destroy;
+end;
+
+function TSeoDb.GetConfig: ISeoConfig; stdcall;
+begin
+  Result:=FConfig;
+end;
+
+function TSeoDb.GetDisplayName: String; stdcall;
+begin
+  Result:=FDisplayName;
+end;
+
+function TSeoDb.GetLog: ISeoLog; stdcall;
+begin
+  Result:=FLog;
+end;
+
+procedure TSeoDb.Init(const FileName: string); stdcall;
+begin
+  LoadFromFile(FileName);
+  FIsInit:=true;
+end;
+
+procedure TSeoDb.Done; stdcall;
+begin
+  if FIsInit then begin
+    FIsInit:=false;
+    UpdateFile;
+  end;
+end;
+
+procedure TSeoDb.ReCreate(const FileName: String); stdcall;
+
+  procedure CreateMainDb;
+  begin
+    with FDataSet do begin
+      Close;
+      FieldDefs.Clear;
+      FieldDefs.Add(SDb_Name,ftString,Db_MaxName);
+      FieldDefs.Add(SDb_Value,ftBlob,MaxInt);
+      FieldDefs.Add(SDb_Note,ftString,Db_MaxNote);
+      FieldDefs.Add(SDb_Type,ftInteger);
+      FieldDefs.Add(SDb_Sync,ftInteger);
+      CreateDataSet;
+    end;
+  end;
+
+
+begin
+  CreateMainDb;
+  SaveToFile(FileName);
+  FFileName:=FileName;
+end;
+
+procedure TSeoDb.LoadFromFile(const FileName: String); stdcall;
+var
+  PackedStream: TMemoryStream;
+const
+  SLoadFromFileSucc='LoadFromFile (%s) success';
+  SLoadFromFileFail='LoadFromFile (%s) fail (error: %s)';
+begin
+  PackedStream:=TMemoryStream.Create;
+  try
+    try
+      PackedStream.LoadFromFile(FileName);
+      PackedStream.Position:=0;
+      FCrypter.DecodeStream(FCipherKey,PackedStream,DefaultCipherAlgorithm,DefaultCipherMode);
+      PackedStream.Position:=0;
+      FDataSet.LoadFromStream(PackedStream);
+      FDataSet.MergeChangeLog;
+      FFileName:=FileName;
+      FOldHash:=GetNewHash;
+      LogWrite(Format(SLoadFromFileSucc,[FileName]),ltInformation,false);
+    except
+      On E: Exception do begin
+        LogWrite(Format(SLoadFromFileFail,[FileName,E.Message]),ltError,false);
+      end;
+    end;  
+  finally
+    PackedStream.Free;
+  end;
+end;
+
+procedure TSeoDb.SaveToFile(const FileName: String); stdcall;
+var
+  UnPackedStream: TMemoryStream;
+const
+  SSaveToFileSucc='SaveToFile (%s) success';
+  SSaveToFileFail='SaveToFile (%s) fail (error: %s)';
+begin
+  UnPackedStream:=TMemoryStream.Create;
+  try
+    try
+      FDataSet.MergeChangeLog;
+      FDataSet.SaveToStream(UnPackedStream);
+      UnPackedStream.Position:=0;
+      FCrypter.EncodeStream(FCipherKey,UnPackedStream,DefaultCipherAlgorithm,DefaultCipherMode);
+      UnPackedStream.Position:=0;
+      UnPackedStream.SaveToFile(FileName);
+      FOldHash:=GetNewHash;
+      LogWrite(Format(SSaveToFileSucc,[FileName]),ltInformation,false);
+    except
+      On E: Exception do
+        LogWrite(Format(SSaveToFileFail,[FileName,E.Message]),ltError,false);
+    end;
+  finally
+    UnPackedStream.Free;
+  end;
+end;
+
+function TSeoDb.ReadParam(const AName: String; var AValue: String): WordBool; stdcall;
+begin
+  Result:=false;
+  if FDataSet.Locate(SDb_Name,AName,[loCaseInsensitive]) then begin
+    AValue:=FDataSet.FieldByName(SDb_Value).Value;
+    Result:=True;
+  end;
+end;
+
+procedure TSeoDb.WriteParam(const AName, AValue: String; IsNew: WordBool); stdcall;
+begin
+  if FDataSet.Locate(SDb_Name,AName,[loCaseInsensitive]) then begin
+    FDataSet.Edit;
+    try
+      try
+        FDataSet.FieldByName(SDb_Value).Value:=AValue;
+      except
+        FDataSet.Cancel;
+      end;
+    finally
+      FDataSet.Post;
+    end;
+  end else begin
+    if IsNew then begin
+      FDataSet.Append;
+      try
+        try
+          FDataSet.FieldByName(SDb_Name).AsString:=AName;
+          FDataSet.FieldByName(SDb_Value).Value:=AValue;
+        except
+          FDataSet.Cancel;
+        end;
+      finally
+        FDataSet.Post;
+      end;
+    end;
+  end;
+end;
+
+function TSeoDb.DeleteParam(const AName: String): WordBool; stdcall;
+begin
+  Result:=false;
+  if FDataSet.Locate(SDb_Name,AName,[loCaseInsensitive]) then begin
+    FDataSet.Delete;
+    Result:=true;
+  end;
+end;
+
+function TSeoDb.ExistsParam(const AName: String): WordBool; stdcall;
+begin
+  Result:=FDataSet.Locate(SDb_Name,AName,[loCaseInsensitive]);
+end;
+
+procedure TSeoDb.UpdateFile(IgnoreChanges: Boolean=false); stdcall;
+begin
+  if not IgnoreChanges then begin
+    if Changes then
+      SaveToFile(FFileName);
+  end else SaveToFile(FFileName);
+end;
+
+function TSeoDb.GetFileName: String; stdcall;
+begin
+  Result:=FFileName;
+end;
+
+procedure TSeoDb.LogWrite(const Message: string; LogType: TSeoLogType; Both: Boolean);
+const
+  SFormatMessage='[%s]: %s';
+begin
+  if Assigned(FLog) then
+    if Both then
+      FLog.WriteToBoth(Format(SFormatMessage,[FDisplayName,Message]),LogType)
+    else
+      FLog.WriteToFile(Format(SFormatMessage,[FDisplayName,Message]),LogType);
+end;
+
+function TSeoDb.GetActive: Boolean; stdcall;
+begin
+  Result:=FileExists(FFileName);
+end;
+
+function TSeoDb.GetDataSet: TDataSet; stdcall;
+begin
+  Result:=FDataSet;
+end;
+
+function TSeoDb.HashValue(Field: TBlobField): String; stdcall;
+var
+  Ms: TMemoryStream;
+begin
+  Result:='';
+  if Assigned(Field) and Assigned(FCrypter) then begin
+    Ms:=TMemoryStream.Create;
+    try
+      Field.SaveToStream(Ms);
+      Ms.Position:=0;
+      Result:=FCrypter.HashStream(Ms,DefaultHashAlgorithm,DefaultHashFormat);
+    finally
+      Ms.Free;
+    end;
+  end; 
+end;
+
+function TSeoDb.GetNewHash: string;
+var
+  Ms: TMemoryStream;
+begin
+  Result:='';
+  try
+    if FDataSet.Active and Assigned(FCrypter) then begin
+      Ms:=TMemoryStream.Create;
+      try
+        FDataSet.MergeChangeLog;
+        FDataSet.SaveToStream(Ms);
+        Ms.Position:=0;
+        Result:=FCrypter.HashStream(Ms,DefaultHashAlgorithm,DefaultHashFormat);
+      finally
+        Ms.Free;
+      end;
+    end;
+  except
+  end;
+end;
+
+function TSeoDb.GetChanges: Boolean;
+var
+  FNewHash: string;
+begin
+  FNewHash:=GetNewHash;
+  Result:=not AnsiSameText(FOldHash,FNewHash);
+end;
+
+end.

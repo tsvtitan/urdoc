@@ -1,0 +1,774 @@
+unit URBRuleForElement;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls, StdCtrls, DBCtrls, Grids, DBGrids, Buttons,
+   UNewDbGrids, inifiles, IBCustomDataSet, IBQuery, IBTable,
+  ImgList, Db,IBDatabase, typinfo;
+
+type
+  TfmRBRuleForElement = class(TForm)
+    pnBut: TPanel;
+    pnGrid: TPanel;
+    ds: TDataSource;
+    pnFind: TPanel;
+    Label1: TLabel;
+    edSearch: TEdit;
+    pnBottom: TPanel;
+    DBNav: TDBNavigator;
+    lbCount: TLabel;
+    Mainqr: TIBQuery;
+    pnModal: TPanel;
+    bibOk: TBitBtn;
+    bibClose: TBitBtn;
+    bibFilter: TBitBtn;
+    pnSQL: TPanel;
+    bibAdd: TBitBtn;
+    bibChange: TBitBtn;
+    bibDel: TBitBtn;
+    tran: TIBTransaction;
+    bibPrint: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure bibAddClick(Sender: TObject);
+    procedure bibChangeClick(Sender: TObject);
+    procedure bibDelClick(Sender: TObject);
+    procedure bibFilterClick(Sender: TObject);
+    procedure edSearchKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure bibCloseClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure MainqrAfterOpen(DataSet: TDataSet);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
+    procedure MainqrCalcFields(DataSet: TDataSet);
+    procedure FormShow(Sender: TObject);
+    procedure bibPrintClick(Sender: TObject);
+  private
+    FindName: string;
+    isFindName: Boolean;
+    FilterInSide: Boolean;
+    procedure GridDrawColumnCell(Sender: TObject; const Rect: TRect;
+                                 DataCol: Integer; Column: TColumn;
+                                 State: TGridDrawState);
+    procedure GridTitleClick(Column: TColumn);
+    procedure GridDblClick(Sender: TObject);
+    procedure SetImageFilter;
+    procedure SaveFilter;
+    procedure ViewCount;
+    function GetFilterString: string;
+    function RuleNameExists(strName: String; var ID: Integer): Boolean;
+
+  public
+    VarAddControl: TControl;
+    isAddOnShow: Boolean;
+    Grid: TNewdbGrid;
+    procedure MR(Sender: TObject);
+    procedure ActiveQuery;
+    procedure LoadFilter;
+  end;
+
+var
+  fmRBRuleForElement: TfmRBRuleForElement;
+   
+implementation
+
+uses Udm, UMain, UEditRuleForElement;
+
+{$R *.DFM}
+
+procedure TfmRBRuleForElement.FormCreate(Sender: TObject);
+var
+  cl: TColumn;
+  ifl: TIntegerField;
+  sfl: TStringField;
+  bfl: TBlobField; 
+begin
+  tran.AddDatabase(dm.IBDbase);
+  dm.IBDbase.AddTransaction(tran);
+  tran.Params.Text:=DefaultTransactionParamsTwo;
+  Mainqr.Transaction:=tran;
+
+  Grid:=TNewdbGrid.Create(self);
+  Grid.Parent:=pnGrid;
+  Grid.Align:=alClient;
+  Grid.DataSource:=ds;
+   Grid.RowSelected.Visible:=true;
+   Grid.RowSelected.Brush.Style:=bsSolid;
+   Grid.RowSelected.Brush.Color:=clBlack;
+   Grid.RowSelected.Font.Color:=clWhite;
+   Grid.RowSelected.Pen.Style:=psClear;
+   Grid.CellSelected.Visible:=true;
+   Grid.CellSelected.Brush.Color:=clHighlight;
+   Grid.CellSelected.Font.Color:=clHighlightText;
+  Grid.Options:=Grid.Options-[dgEditing]-[dgTabs];
+  Grid.ReadOnly:=true;
+  Grid.OnTitleClick:=GridTitleClick;
+  Grid.OnDrawColumnCell:=GridDrawColumnCell;
+  Grid.OnDblClick:=GridDblClick;
+  Grid.OnKeyDown:=FormKeyDown;
+
+  ifl:=TIntegerField.Create(nil);
+  ifl.FieldName:='rule_id';
+  ifl.Visible:=false;
+  ifl.DataSet:=Mainqr;
+
+  sfl:=TStringField.Create(nil);
+  sfl.FieldName:='name';
+  sfl.DataSet:=Mainqr;
+  sfl.Size:=250;
+
+  cl:=Grid.Columns.Add;
+  cl.Field:=sfl;
+  cl.Title.Caption:='Имя поля';
+  cl.Width:=200;
+
+  ifl:=TIntegerField.Create(nil);
+  ifl.FieldName:='elementtype';
+  ifl.Visible:=false;
+  ifl.DataSet:=Mainqr;
+
+  sfl:=TStringField.Create(nil);
+  sfl.FieldName:='elementtypeplus';
+  sfl.FieldKind:=fkCalculated;
+  sfl.Size:=250;
+  sfl.DataSet:=Mainqr;
+
+  cl:=Grid.Columns.Add;
+  cl.Field:=sfl;
+  cl.Title.Caption:='Тип элемента';
+  cl.Width:=200;
+
+  bfl:=TBlobField.Create(nil);
+  bfl.FieldName:='property';
+  bfl.Visible:=false;
+  bfl.DataSet:=Mainqr;
+
+  ifl:=TIntegerField.Create(nil);
+  ifl.FieldName:='near';
+  ifl.Visible:=false;
+  ifl.DataSet:=Mainqr;
+
+  ifl:=TIntegerField.Create(nil);
+  ifl.FieldName:='priority';
+  ifl.DataSet:=Mainqr;
+
+  cl:=Grid.Columns.Add;
+  cl.Field:=ifl;
+  cl.Title.Caption:='Приоритет';
+  cl.Width:=70;
+
+  OnKeyDown:=fmMain.OnKeyDown;
+  OnKeyPress:=fmMain.OnKeyPress;
+  OnKeyUp:=fmMain.OnKeyUp;
+  Mainqr.Database:=dm.IBDbase;
+end;
+
+procedure TfmRBRuleForElement.ActiveQuery;
+var
+ sqls: String;
+begin
+  ds.DataSet:=nil;
+  Mainqr.Active:=false;
+  Mainqr.sql.Clear;
+  sqls:='Select * from '+TableRuleForElement+GetFilterString+' order by name';
+  Mainqr.sql.Add(sqls);
+  Mainqr.Active:=true;
+  ds.DataSet:=Mainqr;
+  SetImageFilter;
+  ViewCount;
+end;
+
+procedure TfmRBRuleForElement.bibAddClick(Sender: TObject);
+var
+  fm: TfmEditRuleForElement;
+  RetVal: Boolean;
+  valname: string;
+  id: Integer;
+  msIn,msOut: TMemoryStream;
+  wr: TWriter;
+  tr: TIBTransaction;
+  tb: TIBTable;
+  tmps: string;
+  rd: TReader;
+begin
+ fm:=TfmEditRuleForElement.Create(nil);
+ try
+  fm.Caption:=captionAdd;
+  fm.btOk.OnClick:=fm.OkClick;
+
+  if VarAddControl<>nil then begin
+    tmps:=GetPropValue(VarAddControl,ConstPropDocFieldName);
+    fm.edName.text:=Trim(tmps);
+    fm.cbObj.ItemIndex:=GetIndexByClass(VarAddControl.ClassType);
+    fm.rbNear.Checked:=false;
+    fm.rbNotNear.Checked:=not fm.rbNear.Checked;
+    fm.CreateDefaultControl;
+    fm.DefaultControl.Name:='';
+    msIn:=TMemoryStream.Create;
+    try
+     wr:=TWriter.Create(msIn,4096);
+     try
+       fm.DefaultControl.Name:='';
+       wr.WriteRootComponent(VarAddControl);
+     finally
+       wr.Free;
+     end;
+     msIn.Position:=0;
+     rd:=TReader.Create(msIn,4096);
+     try
+      rd.ReadRootComponent(fm.DefaultControl);
+     finally
+      rd.Free;
+     end;
+    finally
+      msIn.Free;
+    end;
+    fm.DefaultControl.Left:=0;
+    fm.DefaultControl.Top:=0;
+    fm.ObjInsp.UpdateInspector(fm.DefaultControl);
+  end;
+
+  if fm.ShowModal=mrOk then begin
+
+    valname:=Trim(fm.edName.Text);
+    retval:=RuleNameExists(valname,ID);
+    if retVal then begin
+      ShowError(Application.handle,'Значение <'+valname+'> '+#13+
+               'в поле <'+fm.lbname.Caption+'>'+#13+
+               valuePresent);
+      MainQr.Locate('rule_id',id,[loCaseInsensitive]);
+      exit;
+    end;
+    Screen.Cursor:=crHourGlass;
+    tr:=TIBTransaction.Create(nil);
+    tb:=TIBTable.Create(nil);
+    msIn:=TMemoryStream.Create;
+    msOut:=TMemoryStream.Create;
+    try
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     tb.Database:=dm.IBDbase;
+     tb.Transaction:=tr;
+     tb.Transaction.Active:=true;
+     tb.TableName:=TableRuleForElement;
+     tb.Filter:=' rule_id=0 ';
+     tb.Filtered:=true;
+     tb.Active:=true;
+     tb.Append;
+     tb.FieldByName('name').AsString:=valname;
+     tb.FieldByName('elementtype').AsInteger:=fm.cbObj.ItemIndex;
+     tb.FieldByName('near').AsInteger:=Integer(fm.rbNotNear.Checked);
+     tb.FieldByName('priority').AsInteger:=fm.udPriority.Position;
+
+     wr:=TWriter.Create(msIn,4096);
+     try
+       fm.DefaultControl.Name:='';
+       wr.IgnoreChildren:=true;
+       wr.WriteRootComponent(fm.DefaultControl);
+     finally
+       wr.Free;
+     end;
+
+     msIn.Position:=0;
+     ObjectBinaryToText(msIn,msOut);
+     msOut.Position:=0;
+
+     TBlobField(tb.FieldByName('property')).LoadFromStream(msOut);
+
+     tb.FieldByName('rule_id').Required:=false;
+
+     tb.Post;
+     tb.Transaction.CommitRetaining;
+    finally
+     msOut.Free;
+     msIn.Free;
+     tb.Free;
+     tr.Free;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     Mainqr.Locate('name',valname,[loCaseInsensitive]);
+     ViewCount;
+     Screen.Cursor:=crDefault;
+    end;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmRBRuleForElement.bibChangeClick(Sender: TObject);
+var
+  fm: TfmEditRuleForElement;
+  RetVal: Boolean;
+  valname: string;
+  id: Integer;
+  tr: TIBTransaction;
+  tb: TIBTable;
+  rd: TReader;
+  msIn,msOut: TMemoryStream;
+  wr: TWriter;
+begin
+ if MainQr.RecordCount=0 then exit;
+ fm:=TfmEditRuleForElement.Create(nil);
+ try
+  fm.Caption:=captionChange;
+  fm.edName.text:=Trim(MainQr.FieldByName('name').AsString);
+  fm.cbObj.ItemIndex:=MainQr.FieldByName('elementtype').AsInteger;
+  fm.rbNear.Checked:=MainQr.FieldByName('near').AsInteger=0;
+  fm.rbNotNear.Checked:=not fm.rbNear.Checked;
+  fm.udPriority.Position:=MainQr.FieldByName('priority').AsInteger;
+  if fm.cbObj.ItemIndex=-1 then exit;
+  fm.CreateDefaultControl;
+  fm.DefaultControl.Name:='';
+  msIn:=TMemoryStream.Create;
+  msOut:=TMemoryStream.Create;
+  try
+   TBlobField(MainQr.FieldByName('property')).SaveToStream(msIn);
+   msIn.Position:=0;
+   ObjectTextToBinary(msIn,msOut);
+   msOut.Position:=0;
+   rd:=TReader.Create(msOut,4096);
+   try
+    rd.IgnoreChildren:=true; 
+    rd.ReadRootComponent(fm.DefaultControl);
+   finally
+    rd.Free;
+   end;
+  finally
+    msIn.Free;
+    msOut.Free;
+  end;
+  fm.ObjInsp.UpdateInspector(fm.DefaultControl);
+
+  fm.btOk.OnClick:=fm.OkClick;
+  fm.ChangeFlag:=false;
+
+  if fm.ShowModal=mrOk then begin
+
+    valname:=Trim(fm.edName.Text);
+    retval:=RuleNameExists(valname,Id);
+    if (retVal)and(MainQr.FieldByName('rule_id').AsInteger<>id) then begin
+      ShowError(Application.handle,'Значение <'+valname+'> '+#13+
+               'в поле <'+fm.lbname.Caption+'>'+#13+
+               valuePresent);
+      MainQr.Locate('rule_id',id,[loCaseInsensitive]);
+      exit;
+    end;
+    Screen.Cursor:=crHourGlass;
+    tr:=TIBTransaction.Create(nil);
+    tb:=TIBTable.Create(nil);
+    msIn:=TMemoryStream.Create;
+    msOut:=TMemoryStream.Create;
+    try
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     tb.Database:=dm.IBDbase;
+     tb.Transaction:=tr;
+     tb.Transaction.Active:=true;
+     tb.TableName:=TableRuleForElement;
+     tb.Filter:=' rule_id='+Mainqr.FieldByname('rule_id').AsString;
+     tb.Filtered:=true;
+     tb.Active:=true;
+     tb.Locate('rule_id',MainQr.FieldByName('rule_id').AsInteger,[loCaseInsensitive]);
+     tb.Edit;
+
+     tb.FieldByName('name').AsString:=valname;
+     tb.FieldByName('elementtype').AsInteger:=fm.cbObj.ItemIndex;
+     tb.FieldByName('near').AsInteger:=Integer(fm.rbNotNear.Checked);
+     tb.FieldByName('priority').AsInteger:=fm.udPriority.Position;
+
+     wr:=TWriter.Create(msIn,4096);
+     try
+       fm.DefaultControl.Name:='';
+       wr.IgnoreChildren:=true;
+       wr.WriteRootComponent(fm.DefaultControl);
+     finally
+       wr.Free;
+     end;
+
+     msIn.Position:=0;
+     ObjectBinaryToText(msIn,msOut);
+     msOut.Position:=0;
+
+     TBlobField(tb.FieldByName('property')).LoadFromStream(msOut);
+     
+     tb.Post;
+     tb.Transaction.CommitRetaining;
+    finally
+     msIn.Free;
+     msOut.Free;
+     tb.Free;
+     tr.Free;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     Mainqr.Locate('name',valname,[loCaseInsensitive]);
+     ViewCount;
+     Screen.Cursor:=crDefault;
+    end;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmRBRuleForElement.bibDelClick(Sender: TObject);
+{var
+  but: Integer;}
+
+  function DeleteRecord: Boolean;
+  var
+    qr: TIBQuery;
+    sqls: string;
+    tr: TIBTransaction;
+  begin
+   result:=false;
+   Screen.Cursor:=crHourGlass;
+   tr:=TIBTransaction.Create(nil);
+   qr:=TIBQuery.Create(nil);
+   try
+    try
+
+     tr.AddDatabase(dm.IBDbase);
+     dm.IBDbase.AddTransaction(tr);
+     tr.Params.Text:=DefaultTransactionParamsTwo;
+     qr.Database:=dm.IBDbase;
+     qr.Transaction:=tr;
+     qr.Transaction.Active:=true;
+     sqls:='Delete from '+TableRuleForElement+' where rule_id='+
+          Mainqr.FieldByName('rule_id').asString;
+     qr.sql.Add(sqls);
+     qr.ExecSQL;
+     qr.Transaction.CommitRetaining;
+     Result:=true;
+     Mainqr.Active:=false;
+     Mainqr.Active:=true;
+     Mainqr.Last;
+     ViewCount;
+    except
+    end;
+   finally
+    qr.Free;
+    tr.Free;
+    Screen.Cursor:=crDefault;
+   end;
+
+  end;
+
+var
+  mr: TModalResult;  
+begin
+  if Mainqr.RecordCount=0 then exit;
+  mr:=MessageDlg('Удалить ?',mtConfirmation,[mbYes,mbNo],-1);
+
+//  but:=MessageBox(Handle,Pchar('Удалить ?'),'Предупреждение',MB_YESNO+MB_ICONWARNING);
+  if mr=mrYes then begin
+    if not deleteRecord then begin
+      ShowError(Application.Handle,'Правило с именем поля <'+Mainqr.FieldByName('name').AsString+'> используется.');
+    end;
+  end;
+end;
+
+procedure TfmRBRuleForElement.bibFilterClick(Sender: TObject);
+var
+  fm: TfmEditRuleForElement;
+  filstr: string;
+begin
+ fm:=TfmEditRuleForElement.Create(nil);
+ try
+  fm.Caption:=CaptionFilter;
+  fm.btOk.OnClick:=fm.filterClick;
+
+  fm.rbNear.Enabled:=false;
+  fm.rbNotNear.Enabled:=false;
+  fm.lbPriority.Enabled:=false;
+  fm.edPriority.Enabled:=false;
+  fm.edPriority.Color:=clBtnFace;
+  fm.udPriority.Enabled:=false;
+  fm.cbObj.Enabled:=false;
+  fm.cbObj.Color:=clBtnFace;
+  fm.cbObj.ItemIndex:=-1;
+  fm.ObjInsp.Enabled:=false;
+  fm.ObjInsp.UpdateInspector(nil);
+  fm.sbTest.Enabled:=false;
+  fm.sbTest.Color:=clBtnFace;
+  fm.btLoad.Enabled:=false;
+  fm.btSave.Enabled:=false;
+
+  FreeAndNil(fm.DefaultControl);
+
+  if Trim(FindName)<>'' then fm.edName.Text:=FindName;
+                                  
+  fm.cbInString.Visible:=true;
+  fm.cbInString.Checked:=FilterInSide;
+  fm.ChangeFlag:=false;
+
+  if fm.ShowModal=mrOk then begin
+
+    FindName:=Trim(fm.edName.Text);
+    isFindName:=Trim(FindName)<>'';
+    FilterInSide:=fm.cbInString.Checked;
+    if FilterInSide then filstr:='%';
+
+    SaveFilter;
+    ActiveQuery;
+    ViewCount;
+  end;
+ finally
+  fm.Free;
+ end;
+end;
+
+procedure TfmRBRuleForElement.MR(Sender: TObject);
+begin
+  if MainQr.RecordCount=0 then exit;
+  ModalResult:=mrOk;
+end;
+
+procedure TfmRBRuleForElement.edSearchKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  fn: string;
+begin
+  if not isValidKey(Char(Key)) then exit;
+  if MainQr.IsEmpty then exit;
+  if grid.SelectedField=nil then exit;
+  fn:=grid.SelectedField.FullName;
+  MainQr.Locate(fn,Trim(edSearch.Text),
+                [loPartialKey,loCaseInsensitive]);
+end;
+
+procedure TfmRBRuleForElement.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action:=caFree;
+end;
+
+procedure TfmRBRuleForElement.bibCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfmRBRuleForElement.GridTitleClick(Column: TColumn);
+var
+  fn: string;
+  id: integer;
+begin
+  if not MainQr.Active then exit;
+  if MainQr.RecordCount=0 then exit;
+  Screen.Cursor:=crHourGlass;
+  try
+   fn:=Column.FieldName;
+   if AnsiUpperCase(fn)=AnsiUpperCase('elementtypeplus') then fn:='elementtype';
+
+   id:=MainQr.fieldByName('rule_id').asInteger;
+   MainQr.Active:=false;
+   MainQr.SQL.Clear;
+   MainQr.SQL.Add('Select * from '+TableRuleForElement+GetFilterString+' Order by '+fn);
+   MainQr.Active:=true;
+   MainQr.First;
+   MainQr.Locate('rule_id',id,[loCaseInsensitive]);
+  finally
+    Screen.Cursor:=crDefault;
+  end;
+end;
+
+procedure TfmRBRuleForElement.FormDestroy(Sender: TObject);
+begin
+  Grid.Free;
+  if fsCreatedMDIChild in FormState then
+   fmRBRuleForElement:=nil;
+end;
+
+procedure TfmRBRuleForElement.SetImageFilter;
+begin
+  bibFilter.Glyph.Assign(nil);
+  bibFilter.Glyph.Width:=dm.IlMain.Width;
+  bibFilter.Glyph.Height:=dm.IlMain.Height;
+  if isFindName then begin
+    dm.IlMain.draw(bibFilter.Glyph.Canvas,0,0,0,true);
+  end else begin
+    dm.IlMain.draw(bibFilter.Glyph.Canvas,0,0,1,true);
+  end;
+end;
+
+procedure TfmRBRuleForElement.LoadFilter;
+var
+  fi: TIniFile;
+begin
+  fi:=TIniFile.Create(GetIniFileName);
+  try
+    FindName:=fi.ReadString(ClassName,'Name',FindName);
+    FilterInside:=fi.ReadBool(ClassName,'Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+end;
+
+procedure TfmRBRuleForElement.SaveFilter;
+var
+  fi: TIniFile;
+begin
+  fi:=TIniFile.Create(GetIniFileName);
+  try
+    fi.WriteString(ClassName,'Name',FindName);
+    fi.WriteBool(ClassName,'Inside',FilterInside);
+  finally
+   fi.Free;
+  end;
+end;
+
+function TfmRBRuleForElement.GetFilterString: string;
+var
+  FilInSide: string;
+  wherestr: string;
+  addstr1: string;
+begin
+    Result:='';
+
+    isFindName:=Trim(FindName)<>'';
+
+    if isFindName then begin
+     wherestr:=' where ';
+    end else begin
+    end;
+
+    if FilterInside then FilInSide:='%';
+
+     if isFindName then begin
+        addstr1:=' Upper(name) like '+AnsiUpperCase(QuotedStr(FilInSide+FindName+'%'))+' ';
+     end;
+
+
+     Result:=wherestr+addstr1;
+
+end;
+
+procedure TfmRBRuleForElement.ViewCount;
+begin
+ if MainQr.Active then
+  lbCount.Caption:=ViewCountText+inttostr(GetRecordCount(Mainqr));
+end;
+
+procedure TfmRBRuleForElement.MainqrAfterOpen(DataSet: TDataSet);
+begin
+  ViewCount;
+end;
+
+procedure TfmRBRuleForElement.GridDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+
+  procedure DrawPlusElementType;
+  var
+    val: Integer;
+    x,y: Integer;
+    P: PInfoClass;
+    tmps: string;
+  begin
+    val:=Mainqr.FieldByName('elementtype').AsInteger;
+    x:=rect.Left+2;
+    y:=Rect.Top+2;
+    if (val>=0) or (val<=ListClassesForWord.Count-1) then begin
+      P:=ListClassesForWord.Items[val];
+      tmps:=P.Caption;
+    end else begin
+      tmps:='Элемент не поддерживается';
+    end;
+//    Grid.DefaultDrawColumnCell(Rect,DataCol,Column,State);
+    Grid.Canvas.Brush.Style:=bsClear;
+    Grid.Canvas.FillRect(Rect);
+    if gdSelected in State then
+     Grid.Canvas.Font.Color:=clHighlightText
+    else begin
+      Grid.Canvas.Font.Color:=clWindowText;
+    end;  
+    Grid.Canvas.TextRect(Rect,x,y,tmps);
+  end;
+
+begin
+{  if not Mainqr.Active then exit;
+  if Mainqr.RecordCount=0 then exit;
+  if column.Title.Caption='Тип элемента' then begin
+    DrawPlusElementType;
+  end;}
+end;
+
+procedure TfmRBRuleForElement.GridDblClick(Sender: TObject);
+begin
+  if not Mainqr.Active then exit;
+  if Mainqr.RecordCount=0 then exit;
+  bibChangeClick(nil);
+end;
+
+function TfmRBRuleForElement.RuleNameExists(strName: String; var ID: Integer): Boolean;
+var
+  qr: TIBQuery;
+  sqls: string;
+  tr: TIBTransaction;
+begin
+  Result:=false;
+  Screen.Cursor:=CrHourGlass;
+  tr:=TIBTransaction.Create(nil);
+  qr:=TIBQuery.Create(nil);
+  try
+   tr.AddDatabase(dm.IBDbase);
+   dm.IBDbase.AddTransaction(tr);
+   tr.Params.Text:=DefaultTransactionParamsTwo;
+   qr.Database:=dm.IBDbase;
+   qr.Transaction:=tr;
+   qr.Transaction.Active:=true;
+   sqls:='Select * from '+TableRuleForElement+' where name='''+Trim(strName)+'''';
+   qr.SQL.Add(sqls);
+   qr.Active:=true;
+   if qr.recordCount=1 then begin
+     ID:=qr.FieldByName('rule_id').ASInteger;
+     Result:=true;
+   end;
+  finally
+   qr.Free;
+   tr.Free;
+   Screen.Cursor:=CrDefault;
+  end;
+end;
+
+procedure TfmRBRuleForElement.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case Key of
+    VK_F2: if pnSQL.Visible then bibAdd.Click;
+    VK_F3: if pnSQL.Visible then bibChange.Click;
+    VK_F4: if pnSQL.Visible then bibDel.Click;
+//    VK_F5: bibRefresh.Click;
+    VK_F6: bibFilter.Click;
+  end;
+  fmMain.FormKeyDown(Sender,Key,Shift);
+end;
+
+procedure TfmRBRuleForElement.FormResize(Sender: TObject);
+begin
+  edSearch.Width:=Self.Width-edSearch.Left-pnBut.Width-8;
+end;
+
+procedure TfmRBRuleForElement.MainqrCalcFields(DataSet: TDataSet);
+begin
+  DataSet['elementtypeplus']:=GetTypeElementByIndex(DataSet.fieldbyName('elementtype').AsInteger);
+end;
+
+procedure TfmRBRuleForElement.FormShow(Sender: TObject);
+begin
+  if isAddOnShow then  begin
+    bibAdd.Click;
+  end;
+end;
+
+procedure TfmRBRuleForElement.bibPrintClick(Sender: TObject);
+begin
+  CreateWordTableByGrid(Grid,Caption);
+end;
+
+end.

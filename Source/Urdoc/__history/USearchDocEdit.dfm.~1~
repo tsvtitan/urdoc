@@ -1,0 +1,165 @@
+object fmSearchDocEdit: TfmSearchDocEdit
+  Left = 282
+  Top = 111
+  BorderStyle = bsDialog
+  Caption = 'fmSearchDocEdit'
+  ClientHeight = 154
+  ClientWidth = 315
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbPathName: TLabel
+    Left = 7
+    Top = 68
+    Width = 79
+    Height = 13
+    Caption = 'Вид документа:'
+  end
+  object lbUserName: TLabel
+    Left = 8
+    Top = 285
+    Width = 76
+    Height = 13
+    Caption = 'Пользователь:'
+    Visible = False
+  end
+  object lbString: TLabel
+    Left = 7
+    Top = 15
+    Width = 79
+    Height = 13
+    Caption = 'Наименование:'
+  end
+  object lbHint: TLabel
+    Left = 33
+    Top = 41
+    Width = 53
+    Height = 13
+    Caption = 'Описание:'
+  end
+  object pnBottom: TPanel
+    Left = 0
+    Top = 113
+    Width = 315
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 7
+    object Panel3: TPanel
+      Left = 130
+      Top = 0
+      Width = 185
+      Height = 41
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 1
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 10
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = bibOkClick
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 10
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Отмена'
+        ModalResult = 2
+        TabOrder = 1
+        NumGlyphs = 2
+      end
+    end
+    object bibClear: TBitBtn
+      Left = 7
+      Top = 10
+      Width = 75
+      Height = 25
+      Hint = 'Очистить'
+      Caption = 'Очистить'
+      TabOrder = 0
+      OnClick = bibClearClick
+      NumGlyphs = 2
+    end
+  end
+  object edPathName: TEdit
+    Left = 93
+    Top = 65
+    Width = 189
+    Height = 21
+    TabOrder = 2
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object bibPathName: TBitBtn
+    Left = 282
+    Top = 65
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 3
+    OnClick = bibPathNameClick
+  end
+  object cbInString: TCheckBox
+    Left = 8
+    Top = 96
+    Width = 186
+    Height = 17
+    Caption = 'Поиск по вхождению строки'
+    TabOrder = 6
+  end
+  object edUserName: TEdit
+    Left = 93
+    Top = 282
+    Width = 165
+    Height = 21
+    TabOrder = 4
+    Visible = False
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object edString: TEdit
+    Left = 93
+    Top = 12
+    Width = 210
+    Height = 21
+    TabOrder = 0
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+  object bibUsername: TBitBtn
+    Left = 258
+    Top = 281
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 5
+    Visible = False
+    OnClick = bibUsernameClick
+  end
+  object edHint: TEdit
+    Left = 93
+    Top = 38
+    Width = 210
+    Height = 21
+    MaxLength = 250
+    TabOrder = 1
+    OnChange = edFioChange
+    OnKeyPress = edUserNameKeyPress
+  end
+end

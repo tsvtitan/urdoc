@@ -1,0 +1,433 @@
+object fmDocReestrEdit: TfmDocReestrEdit
+  Left = 422
+  Top = 157
+  BorderStyle = bsDialog
+  Caption = 'fmDocReestrEdit'
+  ClientHeight = 392
+  ClientWidth = 308
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbSumm: TLabel
+    Left = 51
+    Top = 142
+    Width = 35
+    Height = 13
+    Caption = #1057#1091#1084#1084#1072':'
+    Visible = False
+  end
+  object lbDocName: TLabel
+    Left = 38
+    Top = 36
+    Width = 54
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090':'
+  end
+  object lbOperation: TLabel
+    Left = 38
+    Top = 62
+    Width = 54
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1054#1087#1077#1088#1072#1094#1080#1103':'
+  end
+  object lbUserName: TLabel
+    Left = 8
+    Top = 410
+    Width = 76
+    Height = 13
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
+    Visible = False
+  end
+  object lbNumReestr: TLabel
+    Left = 26
+    Top = 11
+    Width = 66
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1057' '#1085#1086#1084#1077#1088#1072' '#8470':'
+  end
+  object lbFio: TLabel
+    Left = 22
+    Top = 88
+    Width = 70
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1060#1072#1084#1080#1083#1080#1103' '#1048'.'#1054':'
+  end
+  object lbCancelAction: TLabel
+    Left = 9
+    Top = 294
+    Width = 158
+    Height = 13
+    Caption = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
+  end
+  object lbHereditaryDeal: TLabel
+    Left = 12
+    Top = 320
+    Width = 116
+    Height = 13
+    Caption = #1053#1072#1089#1083#1077#1076#1089#1090#1074#1077#1085#1085#1086#1077' '#1076#1077#1083#1086':'
+  end
+  object Label3: TLabel
+    Left = 193
+    Top = 11
+    Width = 16
+    Height = 13
+    Caption = #1087#1086':'
+  end
+  object lbNotarialAction: TLabel
+    Left = 17
+    Top = 114
+    Width = 75
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1053#1086#1090'.'#1076#1077#1081#1089#1090#1074#1080#1077':'
+  end
+  object edSumm: TEdit
+    Left = 93
+    Top = 139
+    Width = 203
+    Height = 21
+    TabOrder = 9
+    Visible = False
+    OnKeyPress = edSummKeyPress
+  end
+  object edUserName: TEdit
+    Left = 93
+    Top = 407
+    Width = 188
+    Height = 21
+    TabOrder = 16
+    Visible = False
+  end
+  object pnBottom: TPanel
+    Left = 0
+    Top = 351
+    Width = 308
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 18
+    object Panel3: TPanel
+      Left = 123
+      Top = 0
+      Width = 185
+      Height = 41
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 1
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 10
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = bibOkClick
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 10
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = #1054#1090#1084#1077#1085#1072
+        ModalResult = 2
+        TabOrder = 1
+        NumGlyphs = 2
+      end
+    end
+    object bibClear: TBitBtn
+      Left = 7
+      Top = 10
+      Width = 75
+      Height = 25
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      TabOrder = 0
+      OnClick = bibClearClick
+      NumGlyphs = 2
+    end
+  end
+  object edDocName: TEdit
+    Left = 97
+    Top = 33
+    Width = 181
+    Height = 21
+    TabOrder = 2
+  end
+  object bibDocName: TBitBtn
+    Left = 278
+    Top = 33
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 3
+    OnClick = bibDocNameClick
+  end
+  object edOperName: TEdit
+    Left = 97
+    Top = 59
+    Width = 181
+    Height = 21
+    TabOrder = 4
+  end
+  object bibOperation: TBitBtn
+    Left = 278
+    Top = 59
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 5
+    OnClick = bibOperationClick
+  end
+  object grbDateIn: TGroupBox
+    Left = 8
+    Top = 134
+    Width = 292
+    Height = 51
+    Caption = ' '#1044#1072#1090#1072' '#1074#1074#1086#1076#1072' '
+    TabOrder = 10
+    object lbDateFrom: TLabel
+      Left = 15
+      Top = 23
+      Width = 9
+      Height = 13
+      Caption = 'c:'
+    end
+    object lbDateTo: TLabel
+      Left = 140
+      Top = 23
+      Width = 16
+      Height = 13
+      Caption = #1087#1086':'
+    end
+    object dtpDateFrom: TDateTimePicker
+      Left = 33
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398110000000
+      Time = 37044.591104398110000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 0
+    end
+    object dtpDateTo: TDateTimePicker
+      Left = 166
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398110000000
+      Time = 37044.591104398110000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 1
+    end
+    object bibDateIn: TBitBtn
+      Left = 261
+      Top = 19
+      Width = 22
+      Height = 22
+      Caption = '...'
+      TabOrder = 2
+      OnClick = bibDateInClick
+    end
+  end
+  object cbInString: TCheckBox
+    Left = 8
+    Top = 339
+    Width = 186
+    Height = 17
+    Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1074#1093#1086#1078#1076#1077#1085#1080#1102' '#1089#1090#1088#1086#1082#1080
+    TabOrder = 17
+    Visible = False
+  end
+  object edNumReestr: TEdit
+    Left = 97
+    Top = 7
+    Width = 85
+    Height = 21
+    TabOrder = 0
+    OnKeyPress = edNumReestrKeyPress
+  end
+  object edFio: TEdit
+    Left = 97
+    Top = 85
+    Width = 203
+    Height = 21
+    TabOrder = 6
+  end
+  object grbDateChange: TGroupBox
+    Left = 8
+    Top = 185
+    Width = 292
+    Height = 50
+    Caption = ' '#1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '
+    TabOrder = 11
+    object Label1: TLabel
+      Left = 15
+      Top = 23
+      Width = 9
+      Height = 13
+      Caption = 'c:'
+    end
+    object Label2: TLabel
+      Left = 140
+      Top = 23
+      Width = 16
+      Height = 13
+      Caption = #1087#1086':'
+    end
+    object dtpDateChangeFrom: TDateTimePicker
+      Left = 33
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398110000000
+      Time = 37044.591104398110000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 0
+    end
+    object dtpDateChangeTo: TDateTimePicker
+      Left = 166
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398110000000
+      Time = 37044.591104398110000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 1
+    end
+    object bibDateChange: TBitBtn
+      Left = 261
+      Top = 19
+      Width = 22
+      Height = 22
+      Caption = '...'
+      TabOrder = 2
+      OnClick = bibDateChangeClick
+    end
+  end
+  object cmbCancelAction: TComboBox
+    Left = 173
+    Top = 291
+    Width = 126
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 13
+    Items.Strings = (
+      ''
+      #1054#1090#1084#1077#1085#1077#1085#1085#1099#1077
+      #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1099#1077)
+  end
+  object edHereditaryDeal: TEdit
+    Left = 137
+    Top = 317
+    Width = 140
+    Height = 21
+    TabOrder = 14
+  end
+  object bibHereditaryDeal: TBitBtn
+    Left = 277
+    Top = 317
+    Width = 22
+    Height = 21
+    Caption = '...'
+    TabOrder = 15
+    OnClick = bibHereditaryDealClick
+  end
+  object edNumReestrTo: TEdit
+    Left = 217
+    Top = 7
+    Width = 83
+    Height = 21
+    TabOrder = 1
+    OnKeyPress = edNumReestrKeyPress
+  end
+  object grbCert: TGroupBox
+    Left = 8
+    Top = 235
+    Width = 292
+    Height = 50
+    Caption = ' '#1044#1072#1090#1072' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103'  '
+    TabOrder = 12
+    object Label4: TLabel
+      Left = 15
+      Top = 23
+      Width = 9
+      Height = 13
+      Caption = 'c:'
+    end
+    object Label5: TLabel
+      Left = 140
+      Top = 23
+      Width = 16
+      Height = 13
+      Caption = #1087#1086':'
+    end
+    object dtpCertFrom: TDateTimePicker
+      Left = 33
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398110000000
+      Time = 37044.591104398110000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 0
+    end
+    object dtpCertTo: TDateTimePicker
+      Left = 166
+      Top = 19
+      Width = 95
+      Height = 21
+      Date = 37044.591104398110000000
+      Time = 37044.591104398110000000
+      ShowCheckbox = True
+      Checked = False
+      TabOrder = 1
+    end
+    object bibCert: TBitBtn
+      Left = 261
+      Top = 19
+      Width = 22
+      Height = 22
+      Caption = '...'
+      TabOrder = 2
+      OnClick = bibCertClick
+    end
+  end
+  object edNotarialAction: TEdit
+    Left = 97
+    Top = 111
+    Width = 181
+    Height = 21
+    TabOrder = 7
+  end
+  object bibNotarialAction: TBitBtn
+    Left = 278
+    Top = 111
+    Width = 22
+    Height = 22
+    Caption = '...'
+    TabOrder = 8
+    OnClick = bibNotarialActionClick
+  end
+end

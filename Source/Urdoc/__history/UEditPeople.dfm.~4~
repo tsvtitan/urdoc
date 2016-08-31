@@ -1,0 +1,582 @@
+object fmEditPeople: TfmEditPeople
+  Left = 402
+  Top = 176
+  BorderStyle = bsDialog
+  Caption = #1044#1072#1085#1085#1099#1077' '#1086' '#1095#1077#1083#1086#1074#1077#1082#1077
+  ClientHeight = 402
+  ClientWidth = 603
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbNomin: TLabel
+    Left = 19
+    Top = 12
+    Width = 79
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1048#1084#1077#1085#1080#1090#1077#1083#1100#1085#1099#1081':'
+  end
+  object lbGenit: TLabel
+    Left = 25
+    Top = 37
+    Width = 73
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1056#1086#1076#1080#1090#1077#1083#1100#1085#1099#1081':'
+  end
+  object lbDativ: TLabel
+    Left = 36
+    Top = 62
+    Width = 62
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1072#1090#1077#1083#1100#1085#1099#1081':'
+  end
+  object lbCreat: TLabel
+    Left = 20
+    Top = 87
+    Width = 78
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1058#1074#1086#1088#1080#1090#1077#1083#1100#1085#1099#1081':'
+  end
+  object lbVinit: TLabel
+    Left = 26
+    Top = 112
+    Width = 72
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1042#1080#1085#1080#1090#1077#1083#1100#1085#1099#1081':'
+  end
+  object lbPredl: TLabel
+    Left = 28
+    Top = 137
+    Width = 70
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1055#1088#1077#1076#1083#1086#1078#1085#1099#1081':'
+  end
+  object Label1: TLabel
+    Left = 63
+    Top = 162
+    Width = 35
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1043#1086#1088#1086#1076':'
+  end
+  object Label2: TLabel
+    Left = 63
+    Top = 187
+    Width = 35
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1059#1083#1080#1094#1072':'
+  end
+  object Label3: TLabel
+    Left = 74
+    Top = 212
+    Width = 24
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1086#1084':'
+  end
+  object Label4: TLabel
+    Left = 45
+    Top = 237
+    Width = 53
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1050#1074#1072#1088#1090#1080#1088#1072':'
+  end
+  object Label5: TLabel
+    Left = 14
+    Top = 262
+    Width = 84
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103':'
+  end
+  object Label6: TLabel
+    Left = 9
+    Top = 287
+    Width = 89
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1052#1077#1089#1090#1086' '#1088#1086#1078#1076#1077#1085#1080#1103':'
+  end
+  object Label7: TLabel
+    Left = 26
+    Top = 312
+    Width = 72
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1043#1088#1072#1078#1076#1072#1085#1089#1090#1074#1086':'
+  end
+  object Label8: TLabel
+    Left = 75
+    Top = 337
+    Width = 23
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1055#1086#1083':'
+  end
+  object Label9: TLabel
+    Left = 311
+    Top = 7
+    Width = 100
+    Height = 27
+    Alignment = taRightJustify
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1091#1076#1086#1089#1090#1086#1074'. '#1083#1080#1095#1085#1086#1089#1090#1100' ('#1044#1059#1051'):'
+    WordWrap = True
+  end
+  object Label10: TLabel
+    Left = 351
+    Top = 37
+    Width = 60
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1057#1077#1088#1080#1103' '#1044#1059#1051':'
+  end
+  object Label11: TLabel
+    Left = 351
+    Top = 62
+    Width = 60
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1053#1086#1084#1077#1088' '#1044#1059#1051':'
+  end
+  object Label12: TLabel
+    Left = 293
+    Top = 81
+    Width = 118
+    Height = 25
+    Alignment = taRightJustify
+    Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1074#1099#1076#1072#1074#1096#1077#1075#1086' '#1044#1059#1051':'
+    WordWrap = True
+  end
+  object Label13: TLabel
+    Left = 327
+    Top = 112
+    Width = 84
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1050#1077#1084' '#1074#1099#1076#1072#1085' '#1044#1059#1051':'
+  end
+  object Label14: TLabel
+    Left = 314
+    Top = 137
+    Width = 97
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080' '#1044#1059#1051':'
+  end
+  object Label15: TLabel
+    Left = 311
+    Top = 162
+    Width = 100
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088#1080#1088#1086#1074#1072#1085' '#1089':'
+  end
+  object Label16: TLabel
+    Left = 343
+    Top = 187
+    Width = 68
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1072#1090#1072' '#1089#1084#1077#1088#1090#1080':'
+  end
+  object Label17: TLabel
+    Left = 288
+    Top = 207
+    Width = 123
+    Height = 25
+    Alignment = taRightJustify
+    Caption = #1044#1086#1082'-'#1085#1090' '#1091#1076#1086#1089#1090#1086#1074'. '#1092#1072#1082#1090' '#1089#1084#1077#1088#1090#1080' ('#1044#1059#1060#1057'):'
+    WordWrap = True
+  end
+  object Label18: TLabel
+    Left = 319
+    Top = 237
+    Width = 92
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1050#1077#1084' '#1074#1099#1076#1072#1085' '#1044#1059#1060#1057':'
+  end
+  object Label19: TLabel
+    Left = 343
+    Top = 262
+    Width = 68
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1057#1077#1088#1080#1103' '#1044#1059#1060#1057':'
+  end
+  object Label20: TLabel
+    Left = 343
+    Top = 287
+    Width = 68
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1053#1086#1084#1077#1088' '#1044#1059#1060#1057':'
+  end
+  object Label21: TLabel
+    Left = 306
+    Top = 313
+    Width = 105
+    Height = 13
+    Alignment = taRightJustify
+    Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080' '#1044#1059#1060#1057':'
+  end
+  object pnBottom: TPanel
+    Left = 0
+    Top = 361
+    Width = 603
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 28
+    ExplicitTop = 330
+    ExplicitWidth = 671
+    object Panel3: TPanel
+      Left = 418
+      Top = 0
+      Width = 185
+      Height = 41
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitLeft = 486
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 10
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 10
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = #1054#1090#1084#1077#1085#1072
+        ModalResult = 2
+        TabOrder = 1
+        NumGlyphs = 2
+      end
+    end
+    object bibClear: TBitBtn
+      Left = 7
+      Top = 10
+      Width = 75
+      Height = 25
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      TabOrder = 0
+      OnClick = bibClearClick
+      NumGlyphs = 2
+    end
+  end
+  object edNomin: TEdit
+    Left = 104
+    Top = 9
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 0
+    OnChange = edNominChange
+    OnExit = edNominExit
+    OnKeyPress = edNominKeyPress
+  end
+  object cbInString: TCheckBox
+    Left = 193
+    Top = 336
+    Width = 186
+    Height = 17
+    Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1074#1093#1086#1078#1076#1077#1085#1080#1102' '#1089#1090#1088#1086#1082#1080
+    TabOrder = 27
+    Visible = False
+  end
+  object edGenit: TEdit
+    Left = 104
+    Top = 34
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 1
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edDativ: TEdit
+    Left = 104
+    Top = 59
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 2
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edCreat: TEdit
+    Left = 104
+    Top = 84
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 3
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edVinit: TEdit
+    Left = 104
+    Top = 109
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 4
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edPredl: TEdit
+    Left = 104
+    Top = 134
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 5
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edCity: TEdit
+    Left = 104
+    Top = 159
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 6
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edStreet: TEdit
+    Left = 104
+    Top = 184
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 7
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edHouse: TEdit
+    Left = 104
+    Top = 209
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 8
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edFlat: TEdit
+    Left = 104
+    Top = 234
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 9
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edBirthPlace: TEdit
+    Left = 104
+    Top = 284
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 11
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edCityzen: TEdit
+    Left = 104
+    Top = 309
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 12
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edSex: TEdit
+    Left = 104
+    Top = 334
+    Width = 83
+    Height = 21
+    MaxLength = 50
+    TabOrder = 13
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edDocumentUDL: TEdit
+    Left = 417
+    Top = 9
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 14
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edSeriasDUDL: TEdit
+    Left = 417
+    Top = 34
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 15
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edNumberDUDL: TEdit
+    Left = 417
+    Top = 59
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 16
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edCODDUDL: TEdit
+    Left = 417
+    Top = 84
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 17
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edWhoDealDUDL: TEdit
+    Left = 417
+    Top = 109
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 18
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edDocumentUFD: TEdit
+    Left = 417
+    Top = 209
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 22
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edWhoDealDUFD: TEdit
+    Left = 417
+    Top = 234
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 23
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edSeriasDUFD: TEdit
+    Left = 417
+    Top = 259
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 24
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edNumberDUFD: TEdit
+    Left = 417
+    Top = 284
+    Width = 174
+    Height = 21
+    MaxLength = 50
+    TabOrder = 25
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edBirthday: TMaskEdit
+    Left = 104
+    Top = 259
+    Width = 83
+    Height = 21
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 10
+    Text = '  .  .    '
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edDateDUDL: TMaskEdit
+    Left = 417
+    Top = 134
+    Width = 83
+    Height = 21
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 19
+    Text = '  .  .    '
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edRegistartionFrom: TMaskEdit
+    Left = 417
+    Top = 159
+    Width = 83
+    Height = 21
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 20
+    Text = '  .  .    '
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edDateDeath: TMaskEdit
+    Left = 417
+    Top = 184
+    Width = 83
+    Height = 21
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 21
+    Text = '  .  .    '
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+  object edDateDUFD: TMaskEdit
+    Left = 417
+    Top = 310
+    Width = 83
+    Height = 21
+    EditMask = '!99/99/0000;1;_'
+    MaxLength = 10
+    TabOrder = 26
+    Text = '  .  .    '
+    OnChange = edNominChange
+    OnKeyPress = edNominKeyPress
+  end
+end

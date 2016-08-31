@@ -1,0 +1,242 @@
+program urdoc;
+
+{$R 'blank1.res' 'blank1.rc'}
+
+{$I def.inc}
+
+{$R *.RES}
+
+
+uses
+  Windows,
+  forms,
+  SysUtils,
+  USplash in 'USplash.pas' {fmSplash},
+  UDm in 'UDm.pas' {Dm: TDataModule},
+  UAbout in 'UAbout.pas' {fmAbout},
+  UServerConnect in 'UServerConnect.pas' {fmServerConnect},
+  ULogin in 'ULogin.pas' {fmLogin},
+  UNewDbGrids in 'UNewDbGrids.pas',
+  URBLicense in 'URBLicense.pas' {fmLicense},
+  UEditOperation in 'UEditOperation.pas' {fmEditOperation},
+  UDocTreeCarring in 'UDocTreeCarring.pas' {fmDocTreeCarring},
+  USearchReestr in 'USearchReestr.pas' {fmSearchReestr},
+  URBCase in 'URBCase.pas' {fmCase},
+  UEditLicense in 'UEditLicense.pas' {fmEditLicense},
+  URBOperation in 'URBOperation.pas' {fmOperation},
+  UEditCase in 'UEditCase.pas' {fmEditCase},
+  URBTypeReestr in 'URBTypeReestr.pas' {fmTypeReestr},
+  URBColor in 'URBColor.pas' {fmColor},
+  UEditColor in 'UEditColor.pas' {fmEditColor},
+  UHint in 'UHint.pas' {fmChangeHint},
+  UFind in 'UFind.pas' {fmFind},
+  UNewForm in 'UNewForm.pas' {fmNewForm},
+  UObjInsp in 'UObjInsp.pas' {fmObjInsp},
+  UAlignPalette in 'UAlignPalette.pas' {AlignPalette},
+  UCreateCtrl in 'UCreateCtrl.pas' {fmCreateCtrl},
+  tsvGrids in 'tsvGrids.pas',
+  UNewControls in 'UNewControls.pas',
+  UUnited in 'UUnited.pas',
+  RXCALC in 'RXCALC.PAS',
+  UTabOrder in 'UTabOrder.pas' {fmTabOrder},
+  UCaseReestr in 'UCaseReestr.pas' {fmCaseReestr},
+  UNewOperation in 'UNewOperation.pas' {fmNewOperation},
+  USuperReport in 'USuperReport.pas' {fmSuperReport},
+  UOptions in 'UOptions.pas' {fmOptions},
+  mcompres in 'mcompres.pas',
+  UUtils in 'UUtils.pas',
+  UProgress in 'UProgress.pas' {fmProgress},
+  URBMask in 'URBMask.pas' {fmMask},
+  UEditMaskEdit in 'UEditMaskEdit.pas' {fmEditMaskEdit},
+  URBMarkCar in 'URBMarkCar.pas' {fmMarkCar},
+  UEditMarkCar in 'UEditMarkCar.pas' {fmEditMarkCar},
+  URBNotarius in 'URBNotarius.pas' {fmNotarius},
+  UEditUsers in 'UEditUsers.pas' {fmEditUsers},
+  UEditNotarius in 'UEditNotarius.pas' {fmEditNotarius},
+  URBUsers in 'URBUsers.pas' {fmUsers},
+  UEditSumm in 'UEditSumm.pas' {fmEditSumm},
+  UDocReestr in 'UDocReestr.pas' {fmDocReestr},
+  UDocReestrEdit in 'UDocReestrEdit.pas' {fmDocReestrEdit},
+  USearchReestrEdit in 'USearchReestrEdit.pas' {fmSearchReestrEdit},
+  USearchNumInReestr in 'USearchNumInReestr.pas' {fmSearchNumInReestr},
+  UWorkYear in 'UWorkYear.pas' {fmWorkYear},
+  UDocTree in 'UDocTree.pas' {fmDocTree},
+  UAdjust in 'UAdjust.pas',
+  UEnterPeriod in 'UEnterPeriod.pas' {fmEnterPeriod},
+  USearchDoc in 'USearchDoc.pas' {fmSearchDoc},
+  USearchDocEdit in 'USearchDocEdit.pas' {fmSearchDocEdit},
+  UWorkDate in 'UWorkDate.pas' {fmWorkDate},
+  URBConst in 'URBConst.pas' {fmConst},
+  UEditConst in 'UEditConst.pas' {fmEditConst},
+  ULinksEdit in 'ULinksEdit.pas' {fmLinksEdit},
+  URBNotarialAction in 'URBNotarialAction.pas' {fmRBNotarialAction},
+  UEditNotarialAction in 'UEditNotarialAction.pas' {fmEditNotarialAction},
+  UStatisticReport in 'UStatisticReport.pas' {fmStatisticReport},
+  DsnUnit in 'DsnUnit.pas',
+  UViewRunService in 'UViewRunService.pas' {fmViewRunService},
+  UEditTypeReestr in 'UEditTypeReestr.pas' {fmEditTypeReestr},
+  URBHereditaryDeal in 'URBHereditaryDeal.pas' {fmHereditaryDeal},
+  UEditHereditaryDeal in 'UEditHereditaryDeal.pas' {fmEditHereditaryDeal},
+  RxMemDS in 'RxMemDS.pas',
+  UEditHereditaryDocum in 'UEditHereditaryDocum.pas' {fmEditHereditaryDocum},
+  URBSubs in 'URBSubs.pas' {fmSubs},
+  UEditSubs in 'UEditSubs.pas' {fmEditSubs},
+  URBSubsValue in 'URBSubsValue.pas' {fmSubsValue},
+  UEditSubsValue in 'UEditSubsValue.pas' {fmEditSubsValue},
+  URBPeople in 'URBPeople.pas' {fmRBPeople},
+  UEditPeople in 'UEditPeople.pas' {fmEditPeople},
+  tsvInterbase in 'tsvInterbase.pas',
+  UCheckSum in 'UCheckSum.pas',
+  tsvGradientLabel in 'tsvGradientLabel.pas',
+  UPatchUtil in 'UPatchUtil.pas' {fmPatchUtil},
+  antAngleLabel in 'antAngleLabel.pas',
+  URBRuleForElement in 'URBRuleForElement.pas' {fmRBRuleForElement},
+  UEditRuleForElement in 'UEditRuleForElement.pas' {fmEditRuleForElement},
+  URenameTabSheet in 'URenameTabSheet.pas' {fmRenameTabSheet},
+  USelectNotarius in 'USelectNotarius.pas' {fmSelectNoarius},
+  UInputNumReestr in 'UInputNumReestr.pas' {fmInputNumber},
+  UUpdateInfo in 'UUpdateInfo.pas' {fmUpdateInfo},
+  tsvHintEx in 'tsvHintEx.pas',
+  URBReminder in 'URBReminder.pas' {fmRBReminder},
+  UEditReminder in 'UEditReminder.pas' {fmEditReminder},
+  Marquee in 'Marquee.pas',
+  URBRenovation in 'URBRenovation.pas' {fmRenovation},
+  UEditRenovation in 'UEditRenovation.pas' {fmEditRenovation},
+  Utsvlib in 'Utsvlib.pas',
+  FIOPadeg in 'FIOPadeg.pas',
+  UinUtils in '..\United\UinUtils.pas',
+  Wordconst in 'Wordconst.pas',
+  UEditText in 'UEditText.pas' {fmEditText},
+  UInputSortNum in 'UInputSortNum.pas' {fmInputSortNum},
+  URBGraphVisit in 'URBGraphVisit.pas' {fmGraphVisit},
+  UEditGraphVisit in 'UEditGraphVisit.pas' {fmEditGraphVisit},
+  UListHereditaryDealReport in 'UListHereditaryDealReport.pas' {fmListHereditaryDeal},
+  SeoDb in 'SeoDb.pas',
+  SeoDbConsts in 'SeoDbConsts.pas',
+  URBChamber in 'URBChamber.pas' {fmChamber},
+  UEditChamber in 'UEditChamber.pas' {fmEditChamber},
+  URBNotary in 'URBNotary.pas' {fmNotary},
+  UEditNotary in 'UEditNotary.pas' {fmEditNotary},
+  USelectDatabase in 'USelectDatabase.pas' {fmSelectDatabase},
+  UMain in 'UMain.pas' {fmMain},
+  ScriptEditFm in 'ScriptEditFm.pas' {ScriptEditForm},
+  BisHintEx in 'BisHintEx.pas',
+  BisHint in 'BisHint.pas';
+
+var
+  MainCaption: string;
+     
+  function MoreApplications: Boolean;
+  var
+   ret: DWord;
+   Buffer: String;
+  begin
+    result:=false;
+    MutexHan:=CreateMutex(nil,false,Pchar(UrDocMutex));
+    ret:=GetLastError;
+    if ret=ERROR_ALREADY_EXISTS then begin
+     Buffer:='';
+     if LocalDb.ReadParam(SDb_ParamProgramm,Buffer) then begin
+       Buffer:=Format(SMainCaption,[Buffer]);
+       MainCaption:=Buffer;
+       if  MessageBox(Application.Handle,
+                     Pchar('Приложение < '+Buffer+' > уже запущено,'+#13+'запустить еще копию ?'),
+                     Pchar('Вопрос'),
+                     MB_YESNO+MB_ICONQUESTION)=IDYES then begin
+         Result:=True;
+       end else begin
+        PostMessage(HWND_BROADCAST, MessageId,0,0);
+       end;
+      end;  
+    end else result:=true;
+  end;
+
+begin
+  Application.Initialize;
+  Randomize;
+  SwitchParams;
+  LoadFromIni;
+  RunParamSqlFile(FSqlFileName);
+  InitAll;
+  try
+
+    if isExitCode then begin
+      ExitCode:=1;
+    end;
+    if isExit then
+      exit;
+
+
+    MessageID := RegisterWindowMessage(Pchar(UrDocMutex));
+    try
+      if not MoreApplications then exit;
+
+      fmSplash:=TfmSplash.Create(nil);
+      try
+        fmSplash.Caption:=MainCaption;
+        fmSplash.Show;
+        fmSplash.Update;
+        if isBackUpFirst then
+          CreateBackUp('');
+        if isSelectDatabase then
+          SelectDatabase(false);
+        if not ServerFound then exit;
+        fmSplash.Update;
+        Application.CreateForm(TDm, Dm);
+        fmSplash.Update;
+        fmSplash.Update;
+        if not isLoginToProgramm then exit;
+        fmSplash.lbVersion.Caption:=GetRenovationVersion(fmSplash.lbVersion.Caption);
+        fmSplash.Update;
+        EnterWorkDate(true);
+        fmSplash.Update;
+        Application.CreateForm(TfmMain, fmMain);
+        Application.CreateForm(TfmDocTree, fmDocTree);
+        fmDocTree.FormStyle:=fsMDIChild;
+        DeleteMenu(GetSystemMenu(fmDocTree.Handle, FALSE), SC_CLOSE, MF_BYCOMMAND);
+        Application.CreateForm(TfmDocReestr, fmDocReestr);
+        Application.CreateForm(TfmTabOrder, fmTabOrder);
+        Application.CreateForm(TfmFind, fmFind);
+        Application.CreateForm(TfmObjInsp, fmObjInsp);
+        Application.CreateForm(TAlignPalette, AlignPalette);
+        Application.CreateForm(TfmCreateCtrl, fmCreateCtrl);
+        Application.CreateForm(TfmCaseReestr, fmCaseReestr);
+        Application.CreateForm(TfmProgress, fmProgress);
+
+        fmSplash.Update;
+        fmDocTree.ActiveQuery;
+        fmDocReestr.LoadFilter;
+        fmSplash.Update;
+        fmDocReestr.ActiveQuery;
+
+        CheckPermissions;
+
+        fmMain.SetViewTypeForAllForms;
+        fmMain.WindowState:=wsNormal;
+        fmMain.Left:=0;
+        fmMain.Top:=0;
+
+        if isEdit then begin
+          fmDocTree.WindowState:=wsMaximized;
+          fmDocTree.BringToFront;
+        end else begin
+          fmDocReestr.WindowState:=wsMaximized;
+          fmDocReestr.BringToFront;
+        end;
+        fmMain.WindowState:=wsMaximized;
+
+        fmMain.Show;
+        fmMain.ViewWhoCert;
+
+        if isViewUpdateInfo then
+          ViewUpdateInfo;
+
+    finally
+      fmSplash.Free;
+      Application.Run;
+      if MutexHan<>0 then CloseHandle(MutexHan);
+    end;
+  finally
+    DoneAll;
+  end;
+end.

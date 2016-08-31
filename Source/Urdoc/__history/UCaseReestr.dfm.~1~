@@ -1,0 +1,91 @@
+object fmCaseReestr: TfmCaseReestr
+  Left = 335
+  Top = 221
+  BorderStyle = bsDialog
+  Caption = 'Выбор'
+  ClientHeight = 126
+  ClientWidth = 229
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnBottom: TPanel
+    Left = 0
+    Top = 88
+    Width = 229
+    Height = 38
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+    object Panel3: TPanel
+      Left = 44
+      Top = 0
+      Width = 185
+      Height = 38
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object bibOk: TBitBtn
+        Left = 21
+        Top = 7
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        Default = True
+        TabOrder = 0
+        OnClick = bibOkClick
+        NumGlyphs = 2
+      end
+      object bibCancel: TBitBtn
+        Left = 104
+        Top = 7
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Отмена'
+        ModalResult = 2
+        TabOrder = 1
+        NumGlyphs = 2
+      end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 229
+    Height = 88
+    Align = alClient
+    BevelOuter = bvNone
+    BorderWidth = 5
+    TabOrder = 0
+    object rgbTypeRecord: TRadioGroup
+      Left = 5
+      Top = 5
+      Width = 219
+      Height = 64
+      Align = alTop
+      Caption = ' Тип записи в реестре '
+      ItemIndex = 0
+      Items.Strings = (
+        'Документ из шаблона'
+        'Операция без шаблона')
+      TabOrder = 0
+      OnClick = rgbTypeRecordClick
+    end
+    object chbKeepDoc: TCheckBox
+      Left = 13
+      Top = 72
+      Width = 195
+      Height = 17
+      Caption = 'Хранить документы'
+      TabOrder = 1
+      Visible = False
+    end
+  end
+end

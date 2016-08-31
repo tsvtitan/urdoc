@@ -1,0 +1,164 @@
+{*******************************************************}
+{                                                       }
+{       Delphi Visual Component Library                 }
+{                                                       }
+{       Copyright (c) 1995 Borland International        }
+{       Portions copyright (c) 1997 Master-Bank         }
+{                                                       }
+{*******************************************************}
+
+unit ScriptEditFm;
+
+interface
+
+uses {$IFDEF WIN32} Windows, {$ELSE} WinTypes, WinProcs, {$ENDIF} Classes, 
+  Graphics, Forms, Controls, Buttons, Dialogs, StdCtrls, ExtCtrls,
+  SynEdit, SynHighlighterPas;
+
+type
+  TScriptEditFormCompileScriptEvent=procedure(Sender: TObject; Text: String; var Line, Tab: Integer; var Error: String) of object;
+  
+  TScriptEditForm = class(TForm)
+    OpenDialog: TOpenDialog;
+    SaveDialog: TSaveDialog;
+    LoadBtn: TButton;
+    SaveBtn: TButton;
+    bibOk: TBitBtn;
+    bibCancel: TBitBtn;
+    Memo: TMemo;
+    ButtonCompile: TBitBtn;
+    LabelLine: TLabel;
+    LabelPosition: TLabel;
+    procedure FileOpen(Sender: TObject);
+    procedure FileSave(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure bibOkClick(Sender: TObject);
+    procedure bibCancelClick(Sender: TObject);
+    procedure ButtonCompileClick(Sender: TObject);
+    procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MemoMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+  private
+    FScript: TStringList;
+    FScriptMemo: TSynEdit;
+    FScriptHighlighter: TSynPasSyn;
+    FOnChangeScript: TNotifyEvent;
+    FOnCompileScript: TScriptEditFormCompileScriptEvent;
+    procedure ScriptMemoChange(Sender: TObject);
+    procedure UpdatePositions;
+    procedure ScriptMemoStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+  public
+    procedure InitScript;
+
+    property Script: TStringList read FScript write FScript;
+    property OnChangeScript: TNotifyEvent read FOnChangeScript write FOnChangeScript;
+    property OnCompileScript: TScriptEditFormCompileScriptEvent read FOnCompileScript write FOnCompileScript;  
+  end;
+
+implementation
+
+{$R *.DFM}
+
+uses SysUtils{, LibHelp};
+
+{ TStrListEditDlg }
+
+procedure TScriptEditForm.bibCancelClick(Sender: TObject);
+begin
+  ModalResult:=mrCancel;
+  Close;
+end;
+
+procedure TScriptEditForm.bibOkClick(Sender: TObject);
+begin
+  FScript.Text:=FScriptMemo.Lines.Text;
+  ModalResult:=mrOk;
+  Close;
+end;
+
+procedure TScriptEditForm.ButtonCompileClick(Sender: TObject);
+var
+  Line, Tab: Integer;
+begin
+  if Assigned(FOnCompileScript) then begin
+    Tab:=FScriptMemo.CaretX;
+    Line:=FScriptMemo.CaretY;
+    FOnCompileScript(Self,FScriptMemo.Lines.Text,Line,Tab,Error);
+    FScriptMemo.SetFocus;
+    FScriptMemo.CaretX:=Tab;
+    FScriptMemo.CaretY:=Line;
+  end;
+end;
+
+procedure TScriptEditForm.FileOpen(Sender: TObject);
+begin
+  with OpenDialog do
+    if Execute then FScriptMemo.Lines.LoadFromFile(FileName);
+end;
+
+procedure TScriptEditForm.FileSave(Sender: TObject);
+begin
+  SaveDialog.FileName := OpenDialog.FileName;
+  with SaveDialog do
+    if Execute then FScriptMemo.Lines.SaveToFile(FileName);
+end;
+
+procedure TScriptEditForm.FormCreate(Sender: TObject);
+begin
+  FScriptHighlighter:=TSynPasSyn.Create(Self);
+
+  FScriptMemo:=TSynEdit.Create(Self);
+  FScriptMemo.Parent:=Memo.Parent;
+  FScriptMemo.Left:=Memo.Left;
+  FScriptMemo.Top:=Memo.Top;
+  FScriptMemo.Width:=Memo.Width;
+  FScriptMemo.Height:=Memo.Height;
+  FScriptMemo.Anchors:=Memo.Anchors;
+  FScriptMemo.Highlighter:=FScriptHighlighter;
+  FScriptMemo.OnChange:=ScriptMemoChange;
+  FScriptMemo.OnKeyDown:=Memo.OnKeyDown;
+  FScriptMemo.OnMouseDown:=Memo.OnMouseDown;
+  FScriptMemo.OnStatusChange:=ScriptMemoStatusChange;
+
+  Memo.Free;
+  Memo:=nil;
+end;
+
+procedure TScriptEditForm.ScriptMemoChange(Sender: TObject);
+begin
+  UpdatePositions;
+  if Assigned(FOnChangeScript) then
+    FOnChangeScript(Sender);
+end;
+
+procedure TScriptEditForm.ScriptMemoStatusChange(Sender: TObject;
+  Changes: TSynStatusChanges);
+begin
+  UpdatePositions;
+end;
+
+procedure TScriptEditForm.UpdatePositions;
+begin
+  LabelLine.Caption:='Линия: '+IntToStr(FScriptMemo.CaretY);
+  LabelPosition.Caption:='Колонка: '+IntToStr(FScriptMemo.CaretX);
+end;
+
+procedure TScriptEditForm.InitScript;
+begin
+  FScriptMemo.Lines.Text:=FScript.Text;
+  UpdatePositions;
+end;
+
+procedure TScriptEditForm.MemoKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  UpdatePositions;
+end;
+
+procedure TScriptEditForm.MemoMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  UpdatePositions;
+end;
+
+end.

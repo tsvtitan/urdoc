@@ -1,0 +1,12 @@
+library vcl100;
+
+{$R *.res}
+{$E .rus}
+
+
+
+
+{$R '..\vcldb100.bpl\res.res' '..\vcldb100.bpl\res.rc'}
+
+begin
+end.

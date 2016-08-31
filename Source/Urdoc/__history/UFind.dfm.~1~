@@ -1,0 +1,114 @@
+object fmFind: TfmFind
+  Left = 315
+  Top = 157
+  BorderStyle = bsDialog
+  Caption = 'Найти'
+  ClientHeight = 117
+  ClientWidth = 339
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  FormStyle = fsStayOnTop
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnR: TPanel
+    Left = 249
+    Top = 0
+    Width = 90
+    Height = 117
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 4
+    object bibFind: TBitBtn
+      Left = 8
+      Top = 8
+      Width = 75
+      Height = 25
+      Caption = 'Найти'
+      TabOrder = 0
+      OnClick = bibFindClick
+      Glyph.Data = {
+        F6000000424DF600000000000000760000002800000010000000100000000100
+        0400000000008000000000000000000000001000000010000000000000000000
+        8000008000000080800080000000800080008080000080808000C0C0C0000000
+        FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+        8888888888888888888800000888880000080F000888880F00080F000888880F
+        0008000000080000000800F000000F00000800F000800F00000800F000800F00
+        00088000000000000088880F00080F0008888800000800000888888000888000
+        88888880F08880F0888888800088800088888888888888888888}
+    end
+    object bibCancel: TBitBtn
+      Left = 8
+      Top = 40
+      Width = 75
+      Height = 25
+      Caption = 'Закрыть'
+      TabOrder = 1
+      OnClick = bibCancelClick
+    end
+  end
+  object gbFindStr: TGroupBox
+    Left = 6
+    Top = 2
+    Width = 243
+    Height = 50
+    Caption = ' Строка поиска '
+    TabOrder = 0
+    object cbFindStr: TComboBox
+      Left = 11
+      Top = 17
+      Width = 221
+      Height = 21
+      ItemHeight = 13
+      TabOrder = 0
+    end
+  end
+  object rbWhere: TRadioGroup
+    Left = 6
+    Top = 55
+    Width = 123
+    Height = 57
+    Caption = ' Где искать '
+    ItemIndex = 0
+    Items.Strings = (
+      'в Наименовании'
+      'в Описании')
+    TabOrder = 1
+  end
+  object cbCharCase: TCheckBox
+    Left = 137
+    Top = 58
+    Width = 108
+    Height = 17
+    Caption = 'Регистр'
+    TabOrder = 2
+  end
+  object cbWholeWord: TCheckBox
+    Left = 137
+    Top = 74
+    Width = 108
+    Height = 17
+    Caption = 'Целиком слово'
+    TabOrder = 3
+  end
+  object cbMulti: TCheckBox
+    Left = 137
+    Top = 90
+    Width = 108
+    Height = 17
+    Caption = 'Мульти выбор'
+    TabOrder = 5
+    Visible = False
+  end
+end

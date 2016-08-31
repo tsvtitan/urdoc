@@ -1,0 +1,92 @@
+{*******************************************************}
+{                                                       }
+{       Delphi Visual Component Library                 }
+{                                                       }
+{       Copyright (c) 1995 Borland International        }
+{       Portions copyright (c) 1997 Master-Bank         }
+{                                                       }
+{*******************************************************}
+
+unit ScriptEdit;
+
+interface
+
+uses {$IFDEF WIN32} Windows, {$ELSE} WinTypes, WinProcs, {$ENDIF} Classes, 
+  Graphics, Forms, Controls, Buttons, Dialogs, StdCtrls, ExtCtrls;
+
+type
+  TStrEditDlg = class(TForm)
+    Memo: TMemo;
+    LineCount: TLabel;
+    OpenDialog: TOpenDialog;
+    SaveDialog: TSaveDialog;
+    HelpBtn: TButton;
+    LoadBtn: TButton;
+    SaveBtn: TButton;
+    bibOk: TBitBtn;
+    bibCancel: TBitBtn;
+    procedure FileOpen(Sender: TObject);
+    procedure FileSave(Sender: TObject);
+    procedure UpdateStatus(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure MemoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure HelpBtnClick(Sender: TObject);
+  private
+    SingleLine: string[15];
+    MultipleLines: string[15];
+  end;
+
+implementation
+
+{$R *.DFM}
+
+uses SysUtils{, LibHelp};
+
+{ TStrListEditDlg }
+
+procedure TStrEditDlg.FileOpen(Sender: TObject);
+begin
+  with OpenDialog do
+    if Execute then Memo.Lines.LoadFromFile(FileName);
+end;
+
+procedure TStrEditDlg.FileSave(Sender: TObject);
+begin
+  SaveDialog.FileName := OpenDialog.FileName;
+  with SaveDialog do
+    if Execute then Memo.Lines.SaveToFile(FileName);
+end;
+
+procedure TStrEditDlg.UpdateStatus(Sender: TObject);
+var
+  Count: Integer;
+begin
+  Count := Memo.Lines.Count;
+  if Count = 1 then
+    LineCount.Caption := Format('%d %s', [Count, SingleLine])
+  else
+    LineCount.Caption := Format('%d %s', [Count, MultipleLines]);
+end;
+
+procedure TStrEditDlg.FormCreate(Sender: TObject);
+begin
+//  HelpContext := hcDStringListEditor;
+//  OpenDialog.HelpContext := hcDStringListLoad;
+//  SaveDialog.HelpContext := hcDStringListSave;
+  SingleLine := 'Линия';
+  MultipleLines := 'Линий';
+end;
+
+procedure TStrEditDlg.MemoKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then bibCancel.Click;
+end;
+
+procedure TStrEditDlg.HelpBtnClick(Sender: TObject);
+begin
+  Application.HelpContext(HelpContext);
+end;
+
+end.

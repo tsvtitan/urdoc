@@ -1,0 +1,139 @@
+unit UMain;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, ComCtrls, IBServices, Buttons, ExtCtrls;
+
+type
+  TfmMain = class(TForm)
+    Label1: TLabel;
+    aniRestore: TAnimate;
+    srvRestore: TIBRestoreService;
+    lbArc: TLabel;
+    edArc: TEdit;
+    btArc: TButton;
+    lbBase: TLabel;
+    edBase: TEdit;
+    btBase: TButton;
+    bibClose: TBitBtn;
+    od: TOpenDialog;
+    bibRun: TBitBtn;
+    tm: TTimer;
+    procedure bibCloseClick(Sender: TObject);
+    procedure btArcClick(Sender: TObject);
+    procedure btBaseClick(Sender: TObject);
+    procedure bibRunClick(Sender: TObject);
+    procedure tmTimer(Sender: TObject);
+  private
+    procedure DisableControls(Yes: Boolean);
+  public
+    { Public declarations }
+  end;
+
+var
+  fmMain: TfmMain;
+
+implementation
+
+uses UserFm;
+
+{$R *.DFM}
+
+const
+  DataBaseUserNameSysDBA='user_name=%s';
+  DataBaseUserPassSysDBA='password=%s';
+
+
+procedure TfmMain.bibCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfmMain.btArcClick(Sender: TObject);
+begin
+  od.Filter:='Файлы архивов (*.uda)|*.uda|Все файлы (*.*)|*.*';
+  od.FileName:=edArc.Text;
+  if not od.Execute then exit;
+  edArc.Text:=od.FileName;
+end;
+
+procedure TfmMain.btBaseClick(Sender: TObject);
+begin
+  od.Filter:='Файлы баз данных (*.gdb)|*.gdb|Все файлы (*.*)|*.*';
+  od.FileName:=edBase.Text;
+  if not od.Execute then exit;
+  edBase.Text:=od.FileName;
+end;
+
+procedure TfmMain.bibRunClick(Sender: TObject);
+var
+  Form: TUserForm;
+begin
+  Form:=TUserForm.Create(nil);
+  try
+    try
+      srvRestore.Active:=false;
+      srvRestore.BackupFile.Clear;
+      srvRestore.BackupFile.Add(edArc.Text);
+      srvRestore.DatabaseName.Clear;
+      srvRestore.DatabaseName.Add(edBase.Text);
+      srvRestore.LoginPrompt:=false;
+      srvRestore.Params.Clear;
+      srvRestore.Params.Add(DataBaseUserNameSysDBA);
+      srvRestore.Params.Add(DataBaseUserPassSysDBA);
+      srvRestore.Protocol:=Local;
+      srvRestore.Options:=srvRestore.Options+[Replace]-[CreateNewDB];
+      srvRestore.PageSize:=4096;
+      srvRestore.Attach;
+      srvRestore.ServiceStart;
+      tm.Enabled:=true;
+      DisableControls(true);
+    except
+      on E: Exception do begin
+        MessageDlg('Поля <Архив> или <База> введены неверно.',mtError,[mbOK],-1);
+      end;
+    end;
+  finally
+    Form.Free;
+  end;
+end;
+
+procedure TfmMain.tmTimer(Sender: TObject);
+begin
+  try
+  if srvRestore.Handle<>nil then begin
+   if not srvRestore.IsServiceRunning then begin
+    tm.Enabled:=false;
+    DisableControls(false);
+    MessageDlg('База данных успешно восстановлена.',mtInformation,[mbOK],-1);
+   end;
+  end else begin
+    tm.Enabled:=false;
+    DisableControls(false);
+    MessageDlg('База данных успешно восстановлена.',mtInformation,[mbOK],-1);
+  end;
+  except
+   on E: Exception do begin
+     tm.Enabled:=false;
+     DisableControls(false);
+
+     MessageDlg(E.Message,mtError,[mbOK],-1);
+   end;
+  end;
+end;
+
+procedure TfmMain.DisableControls(Yes: Boolean);
+begin
+  lbArc.Enabled:=not Yes;
+  edArc.Enabled:=not Yes;
+  btArc.Enabled:=not Yes;
+  lbBase.Enabled:=not Yes;
+  edBase.Enabled:=not Yes;
+  btBase.Enabled:=not Yes;
+  bibRun.Enabled:=not Yes;
+  aniRestore.Active:=Yes;
+end;
+
+end.

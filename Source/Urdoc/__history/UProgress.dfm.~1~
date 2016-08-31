@@ -1,0 +1,64 @@
+object fmProgress: TfmProgress
+  Left = 269
+  Top = 239
+  BorderIcons = [biMinimize, biMaximize]
+  BorderStyle = bsDialog
+  Caption = 'Копирование'
+  ClientHeight = 86
+  ClientWidth = 273
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  FormStyle = fsStayOnTop
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 273
+    Height = 86
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 0
+    object lbProgress: TLabel
+      Left = 10
+      Top = 8
+      Width = 255
+      Height = 13
+      AutoSize = False
+      Caption = 'lbProgress'
+    end
+    object Panel2: TPanel
+      Left = 8
+      Top = 25
+      Width = 257
+      Height = 21
+      BevelOuter = bvNone
+      BorderStyle = bsSingle
+      TabOrder = 0
+      object gag: TGauge
+        Left = 0
+        Top = 0
+        Width = 253
+        Height = 17
+        Align = alClient
+        BorderStyle = bsNone
+        Progress = 0
+      end
+    end
+    object bibBreak: TBitBtn
+      Left = 97
+      Top = 55
+      Width = 75
+      Height = 25
+      Caption = 'Прервать'
+      TabOrder = 1
+      OnClick = bibBreakClick
+    end
+  end
+end

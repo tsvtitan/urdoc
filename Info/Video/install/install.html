@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+        <title>Установка программы Нотариус+</title>
+        <script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript" src="install.js"></script>
+        
+        <style type="text/css">
+            /* CSS Document */
+            #cs_flashBody
+            {
+                background-color: #80C9F1;
+                font: .8em/1.3em verdana,arial,helvetica,sans-serif;
+                text-align: center;
+            }
+
+            #cs_noexpressUpdate
+            {
+                margin: 0 auto;
+                font-family:Arial, Helvetica, sans-serif;
+                font-size: x-small;
+                color: #003300;
+                text-align: left;
+                background-image: url(install_nofp_bg.gif);
+                background-repeat: no-repeat;
+                width: 210px; 
+                height: 200px;	
+                padding: 40px;
+            }
+        </style>
+    </head>
+    <body id="cs_flashBody" >
+        <div id="flashcontent">	   		
+            <div id="cs_noexpressUpdate">
+                <p>The Camtasia Studio video content presented here requires JavaScript to be enabled and the  latest version of the Adobe Flash Player. If you are you using a browser with JavaScript disabled please enable it now. Otherwise, please update your version of the free Adobe Flash Player by <a href="http://www.adobe.com/go/getflashplayer">downloading here</a>. </p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var req = swfobject.hasFlashPlayerVersion("8");
+            var bookmark = args.movie ? args.movie : 0;
+            if ( req )
+            {
+                swfobject.embedSWF( "install_controller.swf", "flashcontent", "800", "619", "8", null, { csConfigFile: "install_config.xml", csColor: "80C9F1", csPreloader: "install_preload.swf", csFilesetBookmark: bookmark }, { bgcolor: "80C9F1", quality: "best", allowscriptaccess: "always" } );
+            }
+        </script>
+        <!-- Users looking for simple object / embed tags can copy and paste the needed tags below.
+        <div id="media">
+            <object id="csSWF" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="800" height="619" codebase="http://active.macromedia.com/flash7/cabs/ swflash.cab#version=8">
+                <param name="src" value="install_controller.swf#"/>
+                <param name="bgcolor" value="80C9F1"/>
+                <param name="quality" value="best"/>
+                <param name="allowScriptAccess" value="always"/>
+                <param name="flashVars" value="csConfigFile=install_config.xml&csColor=80C9F1"/>
+                <embed name="csSWF" src="install_controller.swf" width="800" height="619" bgcolor="80C9F1" quality="best" allowScriptAccess="always" flashVars="csConfigFile=install_config.xml&csColor=80C9F1" pluginspage="http://www.adobe.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></embed>
+            </object>
+        </div>
+        -->
+    </body>
+</html>
